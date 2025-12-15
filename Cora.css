@@ -1,0 +1,28 @@
+ /* ============================= Imagen de corazon flotante ============================= */
+
+    .floating-img {
+    position: absolute;
+    width: 80px;
+    pointer-events: none;
+    animation: popUp 1.5s ease-out forwards;
+    opacity: 1;
+    }
+
+    @keyframes popUp {
+        0% {
+            transform: scale(0) translateY(0);
+            opacity: 0;
+        }
+        10% {
+            transform: scale(1.3) translateY(0); /* POP fuerte */
+            opacity: 1;
+        }
+        20% {
+            transform: scale(1) translateY(0);    /* vuelve al tamaño normal */
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1) translateY(-150px); /* sube como antes */
+            opacity: 0;
+        }
+    }

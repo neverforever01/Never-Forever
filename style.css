@@ -1,0 +1,222 @@
+        .floating-hearts { position: fixed; pointer-events: none; z-index: 9999; }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+            .map-section {
+            min-height: 100vh;
+            padding: 2rem;
+            background-color: #ffdae6;
+        }
+        
+        .map-container-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .map-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #a83264;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.1);
+        }
+        
+        .map-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        #map {
+            height: 600px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            color: #8B4513;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #5a4a3a;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ffe4cc;
+            border-radius: 10px;
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff9a76;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn-secondary {
+            background: #ccc;
+        }
+        
+        .btn-secondary:hover {
+            background: #999;
+        }
+        
+        .places-list {
+            max-width: 1400px;
+            margin: 3rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .place-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .place-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .place-card h3 {
+            color: #8B4513;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .place-card .date {
+            color: #D2691E;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .place-card .description {
+            color: #5a4a3a;
+            line-height: 1.6;
+        }
+        
+        .place-card .delete-btn {
+            margin-top: 1rem;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .place-card .delete-btn:hover {
+            background: #c0392b;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            border-radius: 15px;
+            font-family: 'Georgia', serif;
+        }
+        
+        .leaflet-popup-content h3 {
+            color: #8B4513;
+            margin-bottom: 0.5rem;
+        }
+        
+        .leaflet-popup-content .popup-date {
+            color: #D2691E;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .leaflet-popup-content .popup-description {
+            color: #5a4a3a;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .map-title {
+                font-size: 2rem;
+            }
+            
+            #map {
+                height: 400px;
+            }
+            
+            .places-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        button{
+            cursor: pointer;
+            background-color: #FFD1DC;
+            color: #a83264;
+            border: 3px solid #a83264;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+        }
+        button:hover{
+            transform: scale(1.1);
+            background-color: #a83264;
+            color: violet;
+        }

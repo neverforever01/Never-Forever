@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuerdos - Para mi Princesa</title>
+    <link rel="shortcut icon" href="img/Camino mágico.pngSS" type="image/x-icon">
+    <link rel="stylesheet" href="General.css">
+    <link rel="shortcut icon" href="img/RecuerdosBonitosimgcircle.png" type="image/x-icon">
+    <link rel="stylesheet" href="Recuerdos.css">
+    <link rel="stylesheet" href="Cora.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<script>
+       $(document).click(function (e) {
+
+    // Ruta de la imagen que quieras mostrar
+    const imgSrc = "https://cdn-icons-png.flaticon.com/512/1141/1141800.png";
+
+    
+    // Crear imagen
+    const img = $('<img class="floating-img">');
+    img.attr("src", imgSrc);
+
+    // Colocar la imagen donde hiciste clic
+    img.css({
+        left: e.pageX + "px",
+        top: e.pageY + "px"
+    });
+
+    // Añadir al body
+    $("body").append(img);
+
+     // --- REPRODUCIR SONIDO ---
+    let sonido = new Audio("Audios/Iloveyou.mp3");  // Cambia por tu archivo
+    sonido.volume = 1.0;                // Volumen (0 a 1)
+    sonido.play();
+
+    // Eliminarla después de que termine la animación
+    img.on("animationend", function () {
+        $(this).remove();
+    });
+});
+</script>
+<body>
+    <header>
+        <h1>Recuerdos Juntos, Princesa</h1>
+       <nav>
+            <a href="index.html">Inicio</a>
+            <a href="Juegos.html">Juegos</a>
+            <a href="NuestraHistoria.html">Nuestra Historia</a>
+            <a href="Poemas.html">Poemas</a>
+            <a href="Recuerdos.html">Recuerdos y Momentos</a>
+        </nav>
+    </header>   
+    
+    <section class="memory-container">
+        
+
+        <div class="memory-card">
+            <img src="img/Clasediber.png" alt="Recuerdo 2">
+            <h3>El encuentro</h3>
+            <p>Creo que ninguno olvidará el día que nos conocimos, desde el primer momento que hablamos ambos supimos que no sería algo casual, el destino nos juntó y nosotros respetamos su decisión siguiendo juntos.</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="https://www.lavanguardia.com/files/og_thumbnail/uploads/2024/04/12/66195806183d5.jpeg" alt="Recuerdo 1">
+            <h3>Nuestro primer beso</h3>
+            <p>El primer beso, ese que tanto deseaba que me dieses tú, pero que al final acabe teniendo que dártelo yo, que cabezota eres eh? Pero te di un buen primer beso, en un lugar que hicimos especial solo con un beso, un recuerdo que jamás olvidaré.</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="img/mohammedInteligente.jpeg" alt="Recuerdo 3">
+            <h3>Fin de clase</h3>
+            <p>Como olvidar aquel día eh, un día lleno de risas, bromas, y momentos especiales. Horas de conversación por WhatsApp, incluso, un interrogatorio sobre mí 😂.</p>
+        </div>
+    </section>
+
+    
+
+    <section class="memory-container">
+        <div class="memory-card">
+            <img src="img/PrimeraQuedada.png" alt="Recuerdo 2">
+            <h3>Primera quedada</h3>
+            <p>Y nuestra primera quedada aquel sábado, sé que nos vimos esa misma semana un día al salir yo del gym pero, esa no es a la que me refiero, me refiero a aquella quedada en la que comimos <strong>Takis</strong>, reímos y nos contamos cosas el uno del otro y acabamos...  <br><strong><i>Confirmando nuestro mútuo amor ❤️.</i></strong> </p>
+        </div>
+
+        <div class="memory-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8E9ZrcBLYvOrmDXCerbL_uQ7W89GQwFnhY2PzTbTYh9lHQfqUdsfNFAYBloGz53fsNhNljERGaFtJR8ZwLfEVpoZRqKhheq6syUEcyg&s=10" alt="Recuerdo 1">
+            <h3>Primer cine</h3>
+            <p>Fuimos al cine de Mungia a ver <i>Inside Out 2</i>, una película que tú ya habías visto pero, estabas tan emocionada por ir al cine a ver una peli que me dió igual y fuimos a verla de todos modos.</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="https://i.ytimg.com/vi/j5MnLhPZe_o/maxresdefault.jpg" alt="Recuerdo 3">
+            <h3>Primera peli</h3>
+            <p>La primera película que vimos juntos, <i>"Mi mejor verano"</i> me acuerdo como la vimos en aquel banco con el móvil apoyado en la mesa. Fue una película muy divertida pero, lo que más me gustó es estar contigo, ver algo y verte reír, aunque tengo que admitir qye lo de la abuela me pareció tronchante.</p>
+        </div>
+    </section>
+
+    <section class="memory-container">
+        <div class="memory-card">
+            <img src="img/La caseta.png" alt="Recuerdo 2">
+            <h3>La caseta</h3>
+            <p><i><Strong>La caseta</Strong></i>, cuantos recuerdos hay en un simple lugar verdad? <br> la de cosas que hemos comido, hemos visto crepúsculo entre otros muchos recuerdos, un lugar especial para nosotros debido a la gran cantidad de tiempo que pasamos ahí metidos.</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="img/Kokoxaxa.png" alt="Recuerdo 1">
+            <h3>Bufé libre</h3>
+            <p>Creo que es la comida que más he disfrutado este año, una comida sin límites con la persona que amo sin límites. Fue una comida fantástica con una persona fantástica. ❤️ Desgraciadamente, solo fuimos 1 vez, pero, iría mil veces más por todo lo que disfruté viéndote feliz comiendo todos los postres que gustes y tú super contenta comiendo postres sin parar. 😂❤️</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="img/Bocadillos.jpg" alt="Recuerdo 3">
+            <h3>Picnic en el jardín</h3>
+            <p>Que buen momento, comiéndonos un bocadillo en el jardín a la noche con una lucecita disfrutando no solo de la comía, si no también de la tranquilidad de la noche y la paz y la tranquilidad que nos transmitimos el uno al otro.</p>
+        </div>
+    </section>
+
+    <section class="memory-container">
+        <div class="memory-card">
+            <img src="https://i.ytimg.com/vi/a8tJZng14qk/hq720.jpg?sqp=-oaymwEXCK4FEIIDSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBrcQSWUm194-FRbfP2nCg2cHlsrA" alt="Recuerdo 2">
+            <h3>Guerra de globos de agua</h3>
+            <p>No sé si te acordarás de la guerra de globos de agua que hicimos en la terraza de mi casa? que nos pasamos como toda la tarde en la terraza, mojados y felices. Desde luego es un recuerdo que quiero mantener.</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="img/Durmiendo.jpg" alt="Recuerdo 1">
+            <h3>Noches juntos</h3>
+            <p>Guardo un recuerdo para todas esas veces en las que nos dormimos juntitos tú y yo, guardo un espacio en esta sección para que recuerdes cuando dormimos juntos, unos momentos que a mí en concreto me parecen maravillosos.</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="img/Malvaviscos en velas.png" alt="Recuerdo 3">
+            <h3>Una noche especial</h3>
+            <p>Un bonito recuerdo que repito constantemente. Cuando hicimos nubecitas en unas velitas en mi habitación y comimos chuches, pizza y de todo.</p>
+        </div>
+    </section>
+
+    <section class="memory-container">
+        <div class="memory-card">
+            <img src="img/Conversacion WhatsApp.png" alt="Recuerdo 2">
+            <h3>Primera conversación de WhatsApp</h3>
+            <p>Si quieres leer los primeros mensajes que nos mandamos, te he hecho una página con el primer día, faltan algunas cosas y no he podido hacer lo de responder a los estados pero, te vendrán los recuerdos al leerla que es mi intención.</p>
+            <br>
+            <a href="Whatsapp.html" class="btn">Leer recuerdo</a>
+        </div>
+
+        <div class="memory-card">
+            <img src="img/Casa.png" alt="Recuerdo 1">
+            <h3>Primer día en mi casa</h3>
+            <p>Como olvidarlo eh? 😜 Fue un día increíble, me encantó todo lo sucedido aquel día, fue el día en el que nos enamoramos de quedar en mi casa. Lo mejor de aquel día es que te fuiste contenta a casa, al menos lo mejor para mí. 😜</p>
+        </div>
+
+        <div class="memory-card">
+            <img src="https://img.freepik.com/foto-gratis/pareja-tiro-completo-siendo-carinosa-interior_23-2150561467.jpg?semt=ais_hybrid&w=740&q=80" alt="Recuerdo 3">
+            <h3>Una semana juntos</h3>
+            <p>Y aquella semana que nos pasamos juntos? Que bonita semana, amanecer todos los días a tu lado y acostarme todos los días siendo tú lo último que ven mis ojos 😍. Una semana llena de felicidad, diversión y amor, pues parecía que vivíamos juntos y así me imagino nuestra vida. Juntos, felices y cuidándonos el uno al otro. ❤️</p>
+        </div>
+    </section>
+    
+    
+    <footer>
+        Never / Forever — Nunca separados, siempre juntos
+    </footer>
+</body>
+</html>

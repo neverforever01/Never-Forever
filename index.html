@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Para mi Princesa</title>
+    <link rel="shortcut icon" href="img/NeverForeverRedonda.png" type="image/x-icon">
+    <script src="Tiemporela.js"></script>
+    <!-- Tus CSS -->
+    <link rel="stylesheet" href="Principal.css">
+    <link rel="stylesheet" href="Cora.css">
+    <link rel="stylesheet" href="General.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<script>
+    // --- Comportamiento de clic global (imagen flotante + sonido) ---
+    $(document).click(function (e) {
+
+        // Ruta de la imagen que quieras mostrar
+        const imgSrc = "https://cdn-icons-png.flaticon.com/512/1141/1141800.png";
+
+        // Crear imagen
+        const img = $('<img class="floating-img">');
+        img.attr("src", imgSrc);
+
+        // Colocar la imagen donde hiciste clic
+        img.css({
+            left: e.pageX + "px",
+            top: e.pageY + "px"
+        });
+
+        // Añadir al body
+        $("body").append(img);
+
+        // --- REPRODUCIR SONIDO ---
+        let sonido = new Audio("Audios/Iloveyou.mp3");  // Cambia por tu archivo
+        sonido.volume = 1.0;                // Volumen (0 a 1)
+        sonido.play().catch(()=>{/* bloqueo autoplay posible, ignora error */});
+
+        // Eliminarla después de que termine la animación
+        img.on("animationend", function () {
+            $(this).remove();
+        });
+    });
+</script>
+<script>
+    function abrirMapaAmor() {
+        window.location.href = 'mapa.html';
+    }
+</script>
+<body>
+    <header>
+        <h1>Para mi Princesa</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="Juegos.html">Juegos</a>
+            <a href="NuestraHistoria.html">Nuestra Historia</a>
+            <a href="Poemas.html">Poemas</a>
+            <a href="Recuerdos.html">Recuerdos y Momentos</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="inicio">
+        <h2>Never / Forever</h2>
+        <p>Never separados / Forever juntos ❤️</p>
+        <img class="imagenNFcorocenter" src="img/NeverForeverDesenfocado.png" alt="">
+        <h6><span class="NeverForever3">NEVER / FOREVER</span> esa es nuestra frase o mejor dicho la descripción de nuestra relación, porque <strong>NUNCA</strong> estaremos separados y <strong>SIEMPRE</strong> juntos, pero además porque siempre te amaré.</h6>
+    </section>
+
+    <section>
+        <article class="hero">
+            <h1 class="TJh1">Tiempo de relación:</h1>
+            <div class="tiempojuntos">
+                <h3 id="days"></h3><h3>Días</h3><h3 id="hours"></h3><h3>Horas</h3><h3 id="minutes"></h3><h3>Minutos</h3><h3 id="seconds"></h3><h3>Segundos</h3>
+            </div>
+        </article>
+    </section>
+
+    <section>
+        <article class="hero">
+            <div>
+                <div id="divtituFlor">
+                <img style="width: 15%;" src="https://laopinion.com/wp-content/uploads/sites/3/2019/12/canva-bugambilias-purple-color.jpg?w=1200" alt=""><h2 id="Flormoradatitu">Flor morada</h2><img style="width: 15%;" src="https://laopinion.com/wp-content/uploads/sites/3/2019/12/canva-bugambilias-purple-color.jpg?w=1200" alt="">
+                </div>
+                <video src="Buggambilia.mp4" controls></video>
+                <p>Esta es nuestra canción: <strong><i>"Bugambilia"</i></strong></p>
+                <h6>Nada mas oirla, supe que no había canción en este mundo que te representara mejor, una canción cuyo título es: <i>"Bugambilia"</i> una flor morada que junta tu gusto por la naturaleza y el que es tu color favorito; el morado, me encanta esta canción porque cuando la oí supe que a partir de ese momento seria tú canción.</h6>
+            </div>
+        </article>
+    </section>
+
+    <section>
+        <article class="hero" id="fotos">
+            <h2>¿Qué eres?</h2>
+            <div class="divapodos">
+                
+                <ul>
+                    <li>Mi Princesa</li>
+                    <li>Mi nena</li>
+                    <li>Mi amor</li>
+                    <li>Mi vida</li>
+                    <li>Mi todo</li>
+                    <li>Mi niña</li>
+                    <li>Mi cielo</li>
+                    <li>Mi corazón</li>
+                    <li>Mi bebita</li>
+                    <li>Mi chiquita</li>
+                    <li>Mi cosita</li>
+                    <li>Mi cuchistruqis</li>
+                    <li>Mi pequeñaja</li>
+                    <li>Mi chica</li>
+                </ul>
+                <ul>
+                    <li>Mi niña genio</li>
+                    <li>Mi angelito</li>
+                    <li>Mi flor morada</li>
+                    <li>Mi pequeña</li>
+                    <li>Mi amorcito</li>
+                    <li>Cariño</li>
+                    <li>Mi diosa</li>
+                    <li>Mi chica gamer</li>
+                    <li>Mi chiquitina</li>
+                    <li>Mi artista</li>
+                    <li>Mi niña fuerte</li>
+                    <li>Mi peluchito</li>
+                    <li>Mi peli fuegito</li>
+                    <li>Mi persona favorita</li>
+                </ul>
+                <ul>
+                    
+                    <li>Mi ajolito</li>
+                    <li>Mi patito</li>
+                    <li>Mi bichito</li>
+                    <li>Mi pollito</li>
+                    <li>Mi pollollo</li>
+                    <li>Mi gatita</li>
+                </ul>
+            </div>
+        </article>
+    </section>
+    <section>
+        <article class="hero">
+            <button onclick="abrirMapaAmor()" class="mpAmor">Mapa de amor</button>
+        </article>
+        <article class="hero">
+            <button class="helpbutton">Clícame si no te sientes bien</button>
+        </article>
+        <div id="helpModal" class="modal" style="
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+">
+    <div style="
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        max-width: 400px;
+        text-align: center;
+        font-family: sans-serif;
+    ">
+        <h2>Tranquila amor, todo estará bien, no te preocupes</h2>
+        <p>
+            No sé que te estará pasando ahora mismo, pero quiero que sepas que todo estará bien, que sea lo que sea ya pasará, además me tienes a mí para ayudarte si lo necesitas. 
+            <br><br>
+            Respira tranquilamente
+            <br><br>
+            <strong>1… 2… 3… 4… 5…</strong><br><br>
+            Mucho ánimo mi vida, eres una chica fuerte, puedes con todo. 🩷❤️💜 
+        </p>
+        <button id="closeHelp">Cerrar</button>
+    </div>
+</div>
+
+    </section>  
+    <footer>
+        Never / Forever — Nunca separados, siempre juntos
+    </footer>
+<script>
+const helpButton = document.querySelector('.helpbutton');
+const helpModal = document.getElementById('helpModal');
+const closeHelp = document.getElementById('closeHelp');
+
+helpButton.addEventListener('click', () => {
+    helpModal.style.display = "flex";
+});
+
+closeHelp.addEventListener('click', () => {
+    helpModal.style.display = "none";
+});
+
+helpModal.addEventListener('click', (e) => {
+    if(e.target === helpModal) helpModal.style.display = "none";
+});
+</script>
+
+
+</body>
+</html>

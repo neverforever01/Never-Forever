@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Línea de Tiempo - Princesa</title>
+    <link rel="shortcut icon" href="img/NeverForeverRedonda.png" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="General.css">
+    <link rel="stylesheet" href="NuestraHistoria.css">
+    <link rel="stylesheet" href="Cora.css">
+</head>
+<script>
+    $(document).click(function (e) {
+
+    // Ruta de la imagen que quieras mostrar
+    const imgSrc = "https://cdn-icons-png.flaticon.com/512/1141/1141800.png";
+
+    
+    // Crear imagen
+    const img = $('<img class="floating-img">');
+    img.attr("src", imgSrc);
+
+    // Colocar la imagen donde hiciste clic
+    img.css({
+        left: e.pageX + "px",
+        top: e.pageY + "px"
+    });
+
+    // Añadir al body
+    $("body").append(img);
+
+     // --- REPRODUCIR SONIDO ---
+    let sonido = new Audio("Audios/Iloveyou.mp3");  // Cambia por tu archivo
+    sonido.volume = 1.0;                // Volumen (0 a 1)
+    sonido.play();
+
+    // Eliminarla después de que termine la animación
+    img.on("animationend", function () {
+        $(this).remove();
+    });
+});
+</script>
+<body>
+    <header>
+        <img src="img/Corazoneslineacolores.png" alt="">
+        <h1>Nuestra Historia, Princesa</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="Juegos.html">Juegos</a>
+            <a href="NuestraHistoria.html">Nuestra Historia</a>
+            <a href="Poemas.html">Poemas</a>
+            <a href="Recuerdos.html">Recuerdos y Momentos</a>
+        </nav>
+    </header>
+    <section>
+        <article class="caminomágico">
+            <h1>Un paseo por la memoria del amor</h1>
+            <img src="img/Camino mágico.png" alt="">
+            <p>Un cámino mágico por lo largo y ancho de nuestra relación, para recorrer los sucesos importantes y que recuerdes todo lo que hemos vivido una historia bellísima y encantadora que nunca me cansaré de recorrer.</p>
+        </article>
+    </section>
+    <section class="timeline">
+        <div class="event left">
+            <h3>19/06/2024📍 El Primer contacto</h3>
+            <p>En este día nos vimos y hablamos por primera vez, ya desde el primer día confiaste en mí para contarme lo que te pasaba y yo te ayudé como pude.</p>
+        </div>
+
+        <div class="event right">
+            <h3>21/06/2024📍 El día que nos conocimos</h3>
+            <p>En este día no sabíamos que nos encontraríamos de nuevo pero, ¿que pasó? el destino nos volvió a juntar. Fueron 3 horas de risas imparables, momentos inolvidables de la mano de <strong>Mohammed</strong> <i>"El inteligente"</i> y me diste el número en aquella dulce y bonita notita.</p>
+        </div>
+
+        <div class="event left">
+            <h3>21/06/2024📍 Mi artista</h3>
+            <p>Esa misma tarde al salir del gimnasio me encontré en los estados de WhatsApp una auténtica galeria de arte de la mejor de las artistas que he conocido. Una conversación que duro poco pero para mí era especial, sentí que conectaba con alguien con mi misma energía, alguien muy parecido a mí, alguien... <strong>Especial</strong>.</p>
+        </div>
+
+        <div class="event right">
+            <h3>21/06/2024📍 Describiéndome a tus padres</h3>
+            <p>En una larga y muy bonita y graciosa conversación me hiciste un interrogatorio digno del FBI para saber todo sobre mí, ya desde ese momento sabíamos que no acabaríamos siendo solo amigos.</p>
+        </div>
+         <div class="event left">
+            <h3>23/06/2024📍 Una San Juanada</h3>
+            <p> El comodín de tu entretenimiento, así me referí a mí mismo cuando te aburrías y así lo soy, el comodín que mejora los momentos en tu vida. San Juan fue nuestro primer <i>"evento/festividad"</i> juntos y la pasamos por mensaje y la primera foto que me mandaste.</p>
+        </div>
+        <div class="event right">
+            <h3>25/06/2024📍 Perfecta💖</h3>
+            <p>Te dije que eras perfecta y no me equivocaba, porque lo eres, eres perfecta para mí 💖. Te dije que con el tiempo te haría cambiar de opinión y si no lo he hecho ya, lo haré.</p>
+        </div>
+        <div class="event left">
+            <h3>27/06/2024📍 Primera quedada</h3>
+            <p>Una quedada muy divertida que habilitó una segunda quedada ese mismo sábado un principio bonito al resto de quedadas que hemos tenido. Lo pasé genial y cada vez que hablabamos conectaba más contigo.</p>
+        </div>
+        <div class="event right">
+            <h3>29/06/2024📍 Segunda quedada</h3>
+            <p>Una quedada aún más divertida que la primera, donde hicimos varios juegos como el de a ver quien aguanta más cantidad de <strong>Takis</strong> entre otros. Una quedada mágica en la que sume muchas victorias a mi marcador</p>
+        </div>
+        <div class="event left">
+            <h3>01/07/2024📍El primer día de ralación</h3>
+            <p>El primer que salimos como pareja (o al menos oficialmente 😜) a partir de aquí empezó lo más bonito que me ha pasado, la relación más bonita con la que podría haber soñado</p>
+        </div>
+        <div class="event right">
+            <h3>02/07/2024📍 Primera foto juntos</h3>
+            <p>Nuestro segundo día y ya accedí a hacernos una fotito, era una muestra de lo mucho que te quería y era como un mensaje de <strong>Dios</strong> en plan: vas a hacer cualquier cosa por esta chica.</p>
+        </div>
+        <div class="event left">
+            <h3>08/07/2024📍 Mi primer cumpleaños a tu lado</h3>
+            <p>He de admitir que no fue mi mejor cumpleaños, no estuve muy bien contigo, problemas estomacales, fallo con 120Kg en press banca, me lesiono... Pero bueno, lo añado aquí porque también quiero que quede constancia de que han habido malos días, malos momentos, pero, que pese a los problemas, nuestro amor mútuo es más fuerte. </p>
+        </div>
+        </section>
+    <footer>
+        Never / Forever — Nunca separados, siempre juntos
+    </footer>
+
+    <script>
+        const events = document.querySelectorAll('.event');
+        function revealEvents() {
+            const triggerPoint = window.innerHeight * 0.85;
+            events.forEach(event => {
+                const top = event.getBoundingClientRect().top;
+                if (top < triggerPoint) {
+                    event.classList.add('show');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealEvents);
+        revealEvents();
+    </script>
+</body>
+</html>

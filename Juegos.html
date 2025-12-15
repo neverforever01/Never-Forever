@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Juegos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="General.css">
+  <link rel="stylesheet" href="Juegos.css">
+  <link rel="stylesheet" href="Cora.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="shortcut icon" href="img/CoraJugandoCircle.png" type="image/x-icon">
+</head>
+<script>
+    $(document).click(function (e) {
+
+    // Ruta de la imagen que quieras mostrar
+    const imgSrc = "https://cdn-icons-png.flaticon.com/512/1141/1141800.png";
+
+    
+    // Crear imagen
+    const img = $('<img class="floating-img">');
+    img.attr("src", imgSrc);
+
+    // Colocar la imagen donde hiciste clic
+    img.css({
+        left: e.pageX + "px",
+        top: e.pageY + "px"
+    });
+
+    // Añadir al body
+    $("body").append(img);
+
+     // --- REPRODUCIR SONIDO ---
+    let sonido = new Audio("Audios/Iloveyou.mp3");  // Cambia por tu archivo
+    sonido.volume = 1.0;                // Volumen (0 a 1)
+    sonido.play();
+
+    // Eliminarla después de que termine la animación
+    img.on("animationend", function () {
+        $(this).remove();
+    });
+});
+</script>
+<body>
+  <section class="hero" aria-label="Sección principal - Juegos">
+    <div class="wrap">
+      <header class="title">
+        <h1>Juegitos</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="Juegos.html">Juegos</a>
+            <a href="NuestraHistoria.html">Nuestra Historia</a>
+            <a href="Poemas.html">Poemas</a>
+            <a href="Recuerdos.html">Recuerdos y Momentos</a>
+        </nav>
+      </header>
+
+      <div class="grid" role="list">
+        <article class="card" role="listitem" tabindex="0" aria-labelledby="t1">
+          <div>
+            <h3 id="t1">Dinosaurio</h3>
+            <img src="img/Dinosaurimg.png" alt="">
+            <p>El típico juegito del dinosaurio </p>
+          </div>
+          <div>
+            <a class="cta" href="Juegos/Dinosaur.html">Jugar</a>
+          </div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" aria-labelledby="t2">
+          <div>
+            <h3 id="t2">Cuqui Clicker</h3>
+            <p>Un clicker para cuqui, el objetivo es aumentar el numero de clicks hasta llegar a 1.000.000 clicks.</p>
+          </div>
+          <div>
+            <span class="badge">Próximamente</span>
+            <a class="cta" href="CuquiClicker.html">Jugar</a>
+          </div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" aria-labelledby="t3">
+          <div>
+            <h3 id="t3">Ruleta de elección</h3>
+            <img src="img/Ruleta.png" alt="">
+            <p>Una ruleta para que puedas decidir cuando te resulte difícil hacerlo, ya sea para jugar a algo, o para saber qué hacer jutnos.</p>
+          </div>
+          <div>
+            <a class="cta" href="https://spinthewheel.io/es">Jugar</a>
+          </div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" aria-labelledby="t4">
+          <div>
+            <h3 id="t4">El juego del impostor</h3>
+            <img src="https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/11/17/16056244272295.png" alt="">
+            <p> Este es el juego del impostor en el que tienes que adivinar el impostor diciendo palabras.</p>
+          </div>
+          <div>
+            <a class="cta" href="https://impostergame.net/es/play">Jugar</a>
+          </div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" aria-labelledby="t5">
+          <div>
+            <h3 id="t5">Juegos friv</h3>
+            <img src="https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2020/04/10/juegos-friv.png" alt="">
+            <p> Un montón de juegos de todo tipo para que te entretengas como quieras.</p>
+          </div>
+          <div>
+            <a class="cta" href="https://www.friv.com/?gad_source=1&gad_campaignid=15970934081&gbraid=0AAAAAoQQpn8gWMkrVK7duOaPugy5vLWLX&gclid=CjwKCAiA0eTJBhBaEiwA-Pa-hTXVuSN_zkYIJDa398kMMbIgfj7QRwFctWhsjLwp07rBsI513K5vkRoCfzYQAvD_BwE">Jugar</a>
+          </div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" aria-labelledby="t6">
+          <div>
+            <h3 id="t6">Ice Boy and Water Girl</h3>
+            <img src="https://tcf.admeen.org/game/13000/12674/400x246/fireboy-and-watergirl-1-forest-temple.jpg" alt="">
+            <p>El típico juego de parejas de el chico de fuego y la chica agua, para que juguemos en pareja cuando quieras.</p>
+          </div>
+          <div>
+            <a class="cta" href="https://www.minijuegos.com/juego/fireboy-and-watergirl-the-forest-temple?gad_source=1&gad_campaignid=22697283835&gbraid=0AAAAADwNr1iGHRESq-aMPxE1yM5GuoZv7&gclid=CjwKCAiA0eTJBhBaEiwA-Pa-hf6QZfe5ldpdZZIok9kqE0Cpd0LwcjwTF1a_92pYGPQAYPdDyM-QlBoCpeEQAvD_BwE">Jugar</a>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="hearts">❤❤</div>
+
+    </div>
+  </section>
+</body>
+</html>

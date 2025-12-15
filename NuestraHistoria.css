@@ -1,0 +1,85 @@
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        header img{
+            width: 80px;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            border: #a83264 4px solid;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .timeline::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            background: #a83264;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+        }
+        .event {
+            padding: 20px;
+            position: relative;
+            background: #ffdae6;
+            border-radius: 15px;
+            width: 45%;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s ease-out;
+        }
+        .event.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .event.left {
+            left: 0;
+        }
+        .event.right {
+            left: 55%;
+        }
+        .event::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #a83264;
+            border-radius: 50%;
+            top: 20px;
+            z-index: 10;
+        }
+        .event.left::before {
+            right: -35px;
+        }
+        .event.right::before {
+            left: -35px;
+        }
+        .caminomágico {
+            width: 50%;
+            text-align: center;
+            margin: 0 25%;
+        }
+
+        .caminomágico img {
+            width: 40%;
+            border-radius: 20px;
+            border: #a83264 4px solid;
+        }
+
+        .caminomágico h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .caminomágico p {
+            font-size: 1.2rem;
+        }

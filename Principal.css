@@ -1,0 +1,189 @@
+        .hero {
+            text-align: center;
+            padding: 2% 1%;
+            width: 50%;
+            margin-left: 25%;
+            margin-bottom: 2.5%;
+            margin-top: 2.5%;
+            background-color: #ffbfd2;
+            border: solid 2px #a83264;
+            border-radius: 60px;
+        }
+
+        .hero h2 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+        }
+
+        .divapodos{
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-bottom: 20px;
+            
+        }
+
+        li{
+            list-style-type: '❤️';
+        }
+
+        .mpAmor{
+            background: linear-gradient(135deg, #ff9a76, #ffd89b);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        #divtituFlor{
+            display: flex; 
+            margin-left: 22%;
+        }
+
+        #Flormoradatitu{
+            animation: Flormorada 3s ease-in-out infinite;
+            margin-left: 3%;
+            margin-right: 3%;
+        }
+
+        @keyframes Flormorada {
+            0% { color: #af69cd; }
+            50% { color: #56008c; }
+            100% { color: #af69cd; }
+        }
+
+        .NeverForever3{
+            color: #a83264;
+            font-size: 1.2rem;
+        }
+
+        .NeverForever3:hover{
+            color: #ff9fbd;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .hero video {
+            margin-top: 2%;
+            width: 80%;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px #a83264;
+        }
+
+        .hero h6 {
+            font-size: 1rem;
+            margin-top: 10px;
+            font-weight: normal;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+        }
+
+        .hero img {
+            width: 60%;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        
+        .imagenNFcorocenter:hover {
+            transform: scale(1.1);
+        }
+
+
+
+        /* =========================================== Tiempo Juntos =========================================== */
+        .tiempojuntos {
+            display: flex;
+            font-size: 28px;
+            margin: 0 15px;
+            color: #a83264;
+            font-weight: bold;
+            gap: 10px;
+        }
+        .TJh1{
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: TJcolor 5s ease-in-out infinite;
+            text-decoration: underline;
+        }
+
+        @keyframes TJcolor {
+            0% { color: #a83264; }
+            25% { color: #b57edc; }
+            50% { color: #7f4ca5; }
+            75% { color: #b57edc; }
+            100% { color: #a83264; }
+        }
+
+        .helpbutton{
+            background: linear-gradient(135deg, #88E788, #9bfab0);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+
+        /* =========================================== Botón de ayuda =========================================== */
+
+        #closeHelp{
+            padding: 8px 16px;
+            border: none;
+            background: #ff8db1;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        /* =========================================== Media Queries =========================================== */
+        @media (max-width: 500px) {
+            .tiempojuntos {
+                font-size: 10px;
+            }
+            #divtituFlor img{
+                display: none;
+            }
+            .divapodos{
+                flex-direction: column; 
+                align-items: center; 
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .tiempojuntos {
+                flex-direction: column;
+                align-items: center;
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .tiempojuntos {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 1350px) {
+            .tiempojuntos {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 1500px) {
+            .tiempojuntos {
+                font-size: 20px;
+            }
+        }

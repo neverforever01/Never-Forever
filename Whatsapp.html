@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatsApp - Primera conversación</title>
+  <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/2044px-WhatsApp.svg.png" type="image/x-icon">
+  <style>
+    :root{
+      --wh-green:#25D366;
+      --bg:#e5ddd5;
+      --chat-bg:#f0f0f0;
+      --my-bubble:#dcf8c6;
+      --other-bubble:#ffffff;
+      --muted:#667;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    html,body{height:100%;margin:0;background:var(--bg)}
+    .app{
+      width:420px;
+      max-width:100%;
+      height:100%;
+      margin:auto;
+      display:flex;
+      flex-direction:column;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,0.18);
+      background:linear-gradient(180deg,#f6f6f6 0%, #efeae3 100%);
+      border:1px solid rgba(0,0,0,0.04);
+    }
+
+    /* Header */
+    .header{
+      height:72px;display:flex;align-items:center;padding:12px 16px;background:linear-gradient(90deg,var(--wh-green),#128C7E);
+      color:#fff;gap:12px;
+    }
+    .avatar{width:48px;height:48px;border-radius:50%;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect width="48" height="48" fill="%23fff" rx="8"/></svg>');background-size:cover;border:2px solid rgba(255,255,255,0.12)}
+    .avatar img{width:100%;height:100%;border-radius:50%}
+    .header .meta{flex:1}
+    .name{font-weight:700;font-size:16px}
+    .status{font-size:12px;opacity:0.95}
+    .icons{display:flex;gap:8px}
+    .icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.12)}
+
+    /* Chat area */
+    .chat{
+      flex:1;padding:18px;overflow:auto;background-image:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      background-repeat:repeat;display:flex;flex-direction:column;gap:8px;
+    }
+
+    .day-sep{align-self:center;background:rgba(0,0,0,0.08);padding:6px 12px;border-radius:16px;font-size:12px;color:#333}
+
+    .message{
+      max-width:78%;padding:10px 12px;border-radius:14px;display:inline-block;position:relative;font-size:15px;line-height:1.25;word-wrap:break-word;
+      box-shadow:0 1px 0 rgba(0,0,0,0.06);
+    }
+    .message.other{background:var(--other-bubble);align-self:flex-start;border-bottom-left-radius:4px}
+    .message.mine{background:var(--my-bubble);align-self:flex-end;border-bottom-right-radius:4px}
+    .meta-row{display:flex;gap:8px;align-items:center;margin-top:6px;font-size:12px;color:var(--muted);}
+    .tick{font-size:12px;margin-left:6px;opacity:0.75}
+    .bubble-row{display:flex;flex-direction:column}
+
+    .input-bar{
+      height:76px;padding:12px 14px;background:#fff;border-top:1px solid rgba(0,0,0,0.06);display:flex;gap:10px;align-items:center
+    }
+    .input{flex:1;display:flex;gap:8px;align-items:center}
+    .text-input{flex:1;padding:10px 12px;border-radius:22px;border:1px solid rgba(0,0,0,0.06);outline:none;font-size:15px;background:#fafafa}
+    .btn{width:48px;height:48px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--wh-green);color:#fff;border:none;cursor:pointer}
+    .placeholder{font-size:13px;color:var(--muted)}
+
+    /* small screens */
+    @media (max-width:480px){
+      .app{height:100vh;border-radius:0;margin:0;width:100%}
+    }
+
+    /* message timestamps tucked */
+    .ts{font-size:11px;color:var(--muted);margin-left:6px}
+    .bubble-row.mine .meta-row{justify-content:flex-end;}
+  .bubble-row.other .meta-row{justify-content:flex-start;}
+  .tick{font-size:12px;margin-left:6px;opacity:0.75;color:blue;}
+.reply-status {
+  display: flex;
+  align-items: stretch;
+  max-width: 75%;
+  margin-bottom: 4px;
+}
+
+.reply-bar {
+  width: 4px;
+  background-color: #25d366; /* verde WhatsApp */
+  border-radius: 4px;
+}
+
+.reply-content {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-left: 6px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.15);
+  font-size: 13px;
+  max-width: 100%;
+}
+
+.reply-content .preview {
+  color: #128C7E;
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.status-thumb {
+  width: 140px;         /* tamaño típico de WhatsApp */
+  height: 140px;        /* cuadrada */
+  object-fit: cover;    /* recorta sin deformar */
+  border-radius: 8px;
+  margin-top: 2px;
+  display: block;
+  opacity: 0.35;
+}
+
+
+.chat {
+  font-family: sans-serif;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+/* Mensajes normales */
+.message {
+  max-width: 75%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin: 6px 0;
+  position: relative;
+  display: inline-block;
+}
+
+.message.other {
+  background: #ffffff;
+  align-self: flex-start;
+}
+
+.message.mine {
+  background: #d9fdd3;
+  align-self: flex-end;
+}
+
+.time {
+  font-size: 11px;
+  color: #666;
+  margin-left: 6px;
+}
+
+/* ----- ESTILO DE RESPUESTA ----- */
+.reply-container {
+  max-width: 75%;
+  
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  align-self:flex-end;
+}
+
+.reply-container.mine {
+  background: #d9fdd3;
+}
+
+.reply-container.other {
+  background: #ffffff;
+}
+
+.reply-box {
+  display: flex;
+  background: rgba(0,0,0,0.05);
+  border-radius: 8px;
+  padding: 4px 6px;
+  margin-bottom: 4px;
+}
+
+.reply-line {
+  width: 4px;
+  background: #25d366; /* verde como WhatsApp */
+  border-radius: 5px;
+  margin-right: 6px;
+}
+
+.reply-content {
+  font-size: 13px;
+}
+
+.reply-author {
+  font-weight: bold;
+  color: #128C7E;
+  font-size: 12px;
+}
+
+.reply-snippet {
+  opacity: 0.85;
+}
+
+/* Texto del mensaje que envías */
+.message-text {
+  font-size: 14px;
+}
+.time {
+  font-size: 11px;
+  color: #666;
+  margin-left: 4px;
+}
+</style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Simulación de WhatsApp">
+    <div class="header">
+      <div class="avatar" aria-hidden><img src="https://i.pinimg.com/736x/ad/92/52/ad92525708a931771043989ff689bfff.jpg" alt=""></div>
+      <div class="meta">
+        <div class="name">Erik</div>
+        <div class="status">en línea</div>
+      </div>
+      <div class="icons">
+        <div class="icon" title="Llamar">🎥</div>
+        <div class="icon" title="Adjuntar">📞</div>
+        <div class="icon" title="Adjuntar">⋮</div>
+      </div>
+    </div>
+
+    <div id="chat" class="chat" tabindex="0">
+      <div class="day-sep">21 de Junio de 2024</div>
+
+
+      <div class="bubble-row other">
+        <div class="message other">Prueba
+        <div class="meta-row"><span class="ts">11:39</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">Holaa
+        <div class="meta-row"><span class="ts">11:40</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+
+      <div class="bubble-row other">
+        <div class="message other">Holaaa
+        <div class="meta-row"><span class="ts">11:41</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">Holaaaa
+        <div class="meta-row"><span class="ts">11:41</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+        <div class="message other">Holaaaaa
+        <div class="meta-row"><span class="ts">11:41</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">Holaaaaaa
+        <div class="meta-row"><span class="ts">11:41</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+        <div class="message other">Holaaaaa
+        <div class="meta-row"><span class="ts">11:41</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">Holaaaaaaaa
+        <div class="meta-row"><span class="ts">11:41</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://png.pngtree.com/png-clipart/20231002/original/pngtree-koi-fish-cartoon-colored-clipart-illustration-filled-color-japanese-doodle-vector-png-image_12941988.png">
+    </div>
+  </div>    
+        <div class="message other">Wow
+        <div class="meta-row"><span class="ts">15:21</span></div>
+        </div>
+      </div>
+      
+
+      <div class="bubble-row mine">
+        <div class="message mine">😳 te gusta?
+        <div class="meta-row"><span class="ts">15:21</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+
+      <div class="bubble-row other">
+        <div class="message other">A ti no?
+        <div class="meta-row"><span class="ts">15:22</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">No mucho porque las aletas no me han quedado muy bonitas
+        <div class="meta-row"><span class="ts">15:22</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+        <div class="message other">Bueno, a mí si me gusta, pero no soy buen pintor 🤣
+        <div class="meta-row"><span class="ts">15:23</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">🤔🤔🤔
+        <div class="meta-row"><span class="ts">15:23</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">Tienes algo a mano para enseñarme?
+        <div class="meta-row"><span class="ts">15:24</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+  <!-- Respuesta con cita -->
+  <div class="reply-container mine">
+    <div class="reply-box">
+      <div class="reply-line"></div>
+
+      <div class="reply-content">
+        <div class="reply-author">Ahinize</div>
+        <div class="reply-snippet">Tienes algo a mano para enseñarme?</div>
+      </div>
+    </div>
+
+    <div class="message-text">
+      Alguno
+    
+
+    <span class="time">15:24 <span class="tick">✓✓</span></span>
+    </div>
+  </div>
+
+      <div class="bubble-row other">
+        <div class="message other">Un dibujo?
+        <div class="meta-row"><span class="ts">15:24</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">Si
+        <div class="meta-row"><span class="ts">15:24</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+        <div class="message other">Si quieres la próxima vez que te vea llevo mi cuaderno y así nos reímos un rato
+        <div class="meta-row"><span class="ts">15:25</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">Mola la idea
+        <div class="meta-row"><span class="ts">15:25</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">Así Mohamed enseñar obras de arte
+        <div class="meta-row"><span class="ts">15:25</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">😂😂😂
+        <div class="meta-row"><span class="ts">15:25</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">No soy buena para los nombres seguro que me he equivocado pero tú ya me entiendes
+        <div class="meta-row"><span class="ts">15:26</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">😅
+        <div class="meta-row"><span class="ts">15:26</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+        <div class="message other">No, es Mohamed
+        <div class="meta-row"><span class="ts">15:27</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">Jajajajaja, vale vale
+        <div class="meta-row"><span class="ts">15:27</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://i.pinimg.com/736x/04/be/02/04be02c123a9ffc7beb800f538ceb424.jpg">
+    </div>
+  </div>    
+        <div class="message other">Ahora me dirás que no te gusta ninguno de estos
+        <div class="meta-row"><span class="ts">19:18</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">Jajajaj... Bueno... Estos...
+        <div class="meta-row"><span class="ts">19:91</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">Están... Mucho mejor
+        <div class="meta-row"><span class="ts">19:19</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+        <div class="message other">Menos mal
+        <div class="meta-row"><span class="ts">19:19</span></div>
+        </div>
+      </div>
+      <div class="bubble-row other">
+        <div class="message other">😑
+        <div class="meta-row"><span class="ts">19:19</span></div>
+        </div>
+      </div>
+      <div class="bubble-row mine">
+        <div class="message mine">Jajajaj, que te parece?
+        <div class="meta-row"><span class="ts">19:19</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+      <div class="bubble-row other">
+        <div class="message other">Cual de todos?
+        <div class="meta-row"><span class="ts">19:20</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row mine">
+        <div class="message mine">No se... vete diciéndome
+        <div class="meta-row"><span class="ts">19:20</span><span class="tick">✓✓</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+        <div class="message other">Vale
+        <div class="meta-row"><span class="ts">19:20</span></div>
+        </div>
+      </div>
+      <div class="bubble-row other">
+        <div class="message other">Pero recalco que no soy crítico de arte y no tengo derecho tampoco de valorar los dibujos de alguien mejor que yo
+        <div class="meta-row"><span class="ts">19:21</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://artenet.es/media/reviews/photos/original/2b/6c/e0/27389-dibujo-de-caballo-2-37-1616995501.jpg">
+    </div>
+  </div>    
+        <div class="message other">Sinceramente, a este pobre caballo le falta pelo
+        <div class="meta-row"><span class="ts">19:21</span></div>
+        </div>
+      </div>
+    
+      <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://i.pinimg.com/236x/39/33/5e/39335e0eac6c79c50e4313e3881b9a43.jpg">
+    </div>
+  </div>    
+        <div class="message other">Este está bien
+        <div class="meta-row"><span class="ts">19:21</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB-Dw-7q6Vtrcl_udhokqZ9ptYEqzSOza9Bw&s">
+    </div>
+  </div>    
+        <div class="message other">Me gusta el detalle de la forma y sombras
+        <div class="meta-row"><span class="ts">19:22</span></div>
+        </div>
+      </div>
+
+  <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://static.skillshare.com/uploads/project/514371/cover_1242_b7bbb4e82d20ec251c358dd0315e423d.jpg">
+    </div>
+  </div>    
+        <div class="message other">Yo no dibujo una nariz así ni de coña
+        <div class="meta-row"><span class="ts">19:22</span></div>
+        </div>
+      </div>
+
+      <div class="reply-container mine">
+    <div class="reply-box">
+      <div class="reply-line"></div>
+
+      <div class="reply-content">
+        <div class="reply-author">Erik</div>
+        <div class="reply-snippet">Pero recalco que no soy crítico de arte y no tengo derecho tampoco de valorar los dibujos de alguien mejor que yo</div>
+      </div>
+    </div>
+
+    <div class="message-text">
+      
+      Jajajjaa, eso ya lo veremos cuando nos volvamos a ver y me enseñes alguno... 😈😈😈 <br> Y tú dime. no hay problema
+
+    <span class="time">19:22 <span class="tick">✓✓</span></span>
+    </div>
+  </div>
+
+  <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://i.pinimg.com/736x/c6/87/74/c68774c7f1169b18bae6d9ed9bb970c0.jpg">
+    </div>
+  </div>    
+        <div class="message other">Este tiene bien hecha la cara pero desde mi humilde opinión la oreja derecha está rara
+        <div class="meta-row"><span class="ts">19:23</span></div>
+        </div>
+      </div>
+
+      <div class="reply-container mine">
+    <div class="reply-box">
+      <div class="reply-line"></div>
+
+      <div class="reply-content">
+        <div class="reply-author">Erik</div>
+        <div class="reply-snippet">Sinceramente, a este pobre caballo le falta pelo</div>
+      </div>
+    </div>
+
+    <div class="message-text">
+      
+      Este.... Bueno... Ejem en fin tiene.... <br> Es un caballo con alopecia...
+
+    <span class="time">19:23 <span class="tick">✓✓</span></span>
+    </div>
+  </div>
+
+  <div class="reply-container mine">
+    <div class="reply-box">
+      <div class="reply-line"></div>
+
+      <div class="reply-content">
+        <div class="reply-author">Erik</div>
+        <div class="reply-snippet">Este esta bien</div>
+      </div>
+    </div>
+
+    <div class="message-text">
+      
+      Gracias ☺️
+
+    <span class="time">19:23 <span class="tick">✓✓</span></span>
+    </div>
+  </div>
+
+    <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://i.pinimg.com/736x/9e/49/b3/9e49b3b8af9f760ddfc5b14ae0890970.jpg">
+    </div>
+  </div>    
+        <div class="message other">Este las orejas bien pero el ojo derecho lo noto raro
+        <div class="meta-row"><span class="ts">19:24</span></div>
+        </div>
+      </div>
+
+      <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://i.ytimg.com/vi/EfMLSj8KL9k/maxresdefault.jpg">
+    </div>
+  </div>    
+        <div class="message other">La casa está bien
+        <div class="meta-row"><span class="ts">19:24</span></div>
+        </div>
+      </div>
+
+      <div class="reply-container mine">
+    <div class="reply-box">
+      <div class="reply-line"></div>
+
+      <div class="reply-content">
+        <div class="reply-author">Erik</div>
+        <div class="reply-snippet"> Me gusta el detalle de la forma y las sombras</div>
+      </div>
+    </div>
+
+    <div class="message-text">
+      
+      Gracias, me costó Dos días, y además me pase horas intentando entender un poco la teoría de las sombras... <br>
+
+    <span class="time">19:24 <span class="tick">✓✓</span></span>
+    </div>
+  </div>
+
+  <div class="reply-container mine">
+    <div class="reply-box">
+      <div class="reply-line"></div>
+
+      <div class="reply-content">
+        <div class="reply-author">Erik</div>
+        <div class="reply-snippet">Yo no dibujo una nariz así ni de coña</div>
+      </div>
+    </div>
+
+    <div class="message-text">
+      
+      La práctica hace el maestro 
+
+    <span class="time">19:24 <span class="tick">✓✓</span></span>
+    </div>
+  </div>
+
+
+  <div class="bubble-row other">
+      <div class="reply-status">
+      <div class="reply-bar"></div>
+
+    <div class="reply-content">
+      <div class="preview">Ahinize · Estado</div>
+
+      <img class="status-thumb" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyN1fXTNzmYOjdvXA_2fM9vgn0WE_o8itC2Q&s">
+    </div>
+  </div>    
+        <div class="message other">Esta creo que es la cara que mejor te ha salido de las opciones
+        <div class="meta-row"><span class="ts">19:24</span></div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+  </div>
+    <div class="input-bar">
+      <div class="input">
+        <input id="msg" class="text-input" placeholder="Escribir mensaje" aria-label="Escribir mensaje" />
+      </div>
+      <button id="send" class="btn" title="Enviar">➤</button>
+    </div>
+  </div>
+
+  <script>
+    // Simple behavior to add messages
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('msg');
+    const send = document.getElementById('send');
+
+    function appendMessage(text, who='mine'){
+      const row = document.createElement('div');
+      row.className = 'bubble-row ' + who;
+      const msg = document.createElement('div');
+      msg.className = 'message ' + who;
+      msg.textContent = text;
+      const meta = document.createElement('div');
+      meta.className = 'meta-row';
+      const ts = document.createElement('span');
+      ts.className = 'ts';
+      const now = new Date();
+      ts.textContent = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+      meta.appendChild(ts);
+      if(who==='mine'){
+        const tick = document.createElement('span'); tick.className='tick'; tick.textContent='✓✓'; meta.appendChild(tick);
+      }
+      row.appendChild(msg);
+      row.appendChild(meta);
+      chat.appendChild(row);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    send.addEventListener('click', ()=>{
+      const v = input.value.trim();
+      if(!v) return;
+      appendMessage(v,'mine');
+      input.value='';
+      // Simulate a quick reply
+      setTimeout(()=>{appendMessage('¡Buena idea! Lo reviso más tarde.','other')},700);
+    });
+
+    input.addEventListener('keydown',(e)=>{
+      if(e.key==='Enter'){
+        e.preventDefault(); send.click();
+      }
+    });
+
+    // ensure chat is scrolled to bottom on load
+    window.addEventListener('load',()=>{chat.scrollTop = chat.scrollHeight});
+  </script>
+</body>
+</html>
