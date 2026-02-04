@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
+    <title>Cuqui Clicker ❤️</title>
+    <link rel="shortcut icon" href="https://media.discordapp.net/attachments/1320468688058585118/1468520512941457543/image-Photoroom_4.png?ex=698451ce&is=6983004e&hm=4e1f6b73709d1cbcd6156770f2641cd37f0d6df0b16e3309929d1d4bc0d61708&=&format=webp&quality=lossless&width=286&height=250" type="image/x-icon">
+    <style>
+        /* --- ESTILOS (CSS) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffe6eb;
+            background-image: radial-gradient(#ffcad4 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #ff5e78;
+            font-size: 2.2rem;
+            margin-top: 20px;
+            text-shadow: 2px 2px white;
+        }
+
+        .game-layout {
+            display: flex;
+            gap: 20px;
+            max-width: 900px;
+            width: 95%;
+            height: 80vh;
+            margin-top: 10px;
+        }
+
+        .click-zone {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 94, 120, 0.2);
+            position: relative;
+        }
+
+        #score { font-size: 3rem; color: #ff5e78; font-weight: bold; }
+        #per-second { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+
+        #main-heart {
+            font-size: 7rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+            filter: drop-shadow(0 0 10px rgba(255, 94, 120, 0.5));
+            background: none;
+            border: none;
+        }
+
+        #main-heart:active { transform: scale(0.9); }
+
+        .shop-zone {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .shop-item {
+            background: white;
+            border: 2px solid #ffcbd4;
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shop-btn {
+            background: #ff8fa3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .shop-btn:disabled { background: #ddd; }
+
+        /* --- AQUÍ SE DEFINE EL ESTILO DE LA IMAGEN QUE APARECE --- */
+        #bonus-img {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            display: none; 
+            z-index: 1000;
+            animation: wiggle 1s infinite;
+        }
+
+        #gold-heart {
+            position: absolute;
+            width: 70px;  /* Un poco más pequeño para que sea difícil */
+            height: 70px;
+            display: none; /* Oculto por defecto */
+            z-index: 2000; /* Por encima de TODO */
+            cursor: pointer;
+            /* Esta línea hace la magia del movimiento suave: */
+            transition: top 1s linear, left 1s linear; 
+            filter: drop-shadow(0 0 15px #ffd700); /* Brillo dorado */
+        }
+
+        /* Efecto al hacer click */
+        #gold-heart:active {
+            transform: scale(0.8);
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        .floater {
+            position: absolute;
+            color: #ff5e78;
+            font-weight: bold;
+            animation: floatUp 0.8s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+
+
+        @media (max-width: 700px) {
+            .game-layout {
+                flex-direction: column;
+                height: auto;
+            }
+            .shop-zone {
+                max-height: 400px;
+            }
+            .bonus-img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        * {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cuqui Clicker ❤️</h1>
+
+    <div class="game-layout">
+        <div class="click-zone">
+            <div id="score">0</div>
+            <div id="per-second">Amor por segundo: 0</div>
+            <button id="main-heart">💖</button>
+        </div>
+
+        <div class="shop-zone">
+            <h3>Mejoras de Click (1 sola vez)</h3>
+            <div id="multipliers-list"></div>
+            <h3>Ayuditas Automáticas</h3>
+            <div id="autoclickers-list"></div>
+            <br>
+            <button onclick="resetGame()" style="background:none; border:none; color: #ccc; cursor:pointer; font-size: 0.7rem;">Reiniciar todo el progreso</button>
+        </div>
+    </div>
+
+    <img id="gold-heart" src="https://static.vecteezy.com/system/resources/thumbnails/052/295/257/small/golden-heart-figure-3d-illustration-isolated-on-the-transparent-background-png.png" alt="Golden Heart">
+    <img id="bonus-img" src="https://png.pngtree.com/recommend-works/png-clipart/20250321/ourmid/pngtree-cute-illustration-of-baby-dinosaur-png-image_15832645.png" alt="Bonus" onclick="clickBonus()">
+    <script>
+        let score = 0;
+        let clickPower = 1;
+        let autoClickPerSecond = 0;
+        let bonusDesbloqueado = false;
+        let goldenheart = false;
+
+        const multipliers = [
+            { id: 'bonus_unlock', name: "Mini Dinos", cost: 150, power: 1, bought: false },
+            { id: 'golden_heart', name: "Corazón Dorado", cost: 750, power: 1, bought: false },
+            { id: 'm1', name: "Doble Click", cost: 120, power: 2, bought: false },
+            { id: 'm2', name: "Triple Click", cost: 280, power: 3, bought: false },
+            { id: 'm3', name: "Click x4", cost: 560, power: 4, bought: false },
+            { id: 'm4', name: "Click x5", cost: 1280, power: 5, bought: false },
+            { id: 'm5', name: "Click x6", cost: 2130, power: 6, bought: false },
+            { id: 'm6', name: "Click x7", cost: 3230, power: 7, bought: false },
+            { id: 'm7', name: "Click x8", cost: 4500, power: 8, bought: false },
+            { id: 'm8', name: "Click x9", cost: 5120, power: 9, bought: false },
+            { id: 'm10', name: "Super Click x10", cost: 8000, power: 10, bought: false }
+            
+        ];
+
+        const autoClickers = [
+            { id: 'a1', name: "Pensamiento fugaz", cost: 200, eps: 1, count: 0 },
+            { id: 'a2', name: "Carta de amor", cost: 750, eps: 5, count: 0 },
+            { id: 'a3', name: "Siempre en mi mente", cost: 5000, eps: 50, count: 0 }
+        ];
+        
+        // Imágenes sorpresa
+        const misImagenesBonus = [
+            "https://png.pngtree.com/recommend-works/png-clipart/20250321/ourmid/pngtree-cute-illustration-of-baby-dinosaur-png-image_15832645.png", // Imagen 1 (Bronto 1)
+            "https://images.vexels.com/media/users/3/322428/isolated/preview/038bef0d3e89523cad0e5d87b7e9115e-dinosaurio-caminando-con-regalos-de-cumpleanos-en-la-espalda.png", // Imagen 2 (Bronto fiestero)
+            "https://i.pinimg.com/originals/e3/44/3b/e3443b8fa09fbcf54ae07a6d8c39ab87.png",  // Imagen 3 (Rex chiquito)
+            "https://i.pinimg.com/originals/d5/0a/38/d50a3847d37ae4abeb8adf5e69894d9f.png",  // Imagen 4 (Dino dormido)
+            "https://i.pinimg.com/originals/41/46/20/41462030e2edf492b1a78f56ffd34322.png",  // Imagen 5 (Dino RAWR)
+            "https://images.vexels.com/media/users/3/322425/isolated/preview/ec57c9dc79af8a5e9a5396ff2660fd21-dinosaurio-con-globos-de-cumpleanos-en-la-cola.png" // Imagen 6 (Estego fiestero)
+        ];
+
+        const scoreEl = document.getElementById('score');
+        const perSecondEl = document.getElementById('per-second');
+        const heartBtn = document.getElementById('main-heart');
+        const bonusImg = document.getElementById('bonus-img');
+        const goldHeart = document.getElementById('gold-heart');
+        let moveInterval; // Variable para controlar el movimiento
+        
+        // --- LÓGICA DE LOCAL STORAGE (GUARDADO) ---
+
+        function saveGame() {
+            const data = {
+                score, clickPower, autoClickPerSecond, multipliers, autoClickers, bonusDesbloqueado, goldenheart
+            };
+            localStorage.setItem('amorData', JSON.stringify(data));
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('amorData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                score = data.score;
+                clickPower = data.clickPower;
+                autoClickPerSecond = data.autoClickPerSecond;
+                bonusDesbloqueado = data.bonusDesbloqueado || false;
+                goldenheart = data.goldenheart || false;
+                data.multipliers.forEach((m, i) => Object.assign(multipliers[i], m));
+                data.autoClickers.forEach((a, i) => Object.assign(autoClickers[i], a));
+            }
+        }
+
+        function resetGame() {
+            if(confirm("¿Seguro que quieres borrar todo el amor acumulado?")) {
+                localStorage.removeItem('amorData');
+                location.reload();
+            }
+        }
+
+        // --- FUNCIONES DE TIENDA Y CLICK ---
+
+        function renderShop() {
+        const mList = document.getElementById('multipliers-list');
+        mList.innerHTML = '';
+
+        // Encontramos cuál es el poder de click más alto que ya ha comprado
+        // (Ignoramos los que tienen power 1 porque son desbloqueos de bonus)
+        let maxPowerBought = 1;
+        multipliers.forEach(m => {
+            if (m.bought && m.power > maxPowerBought) {
+                maxPowerBought = m.power;
+            }
+        });
+
+        multipliers.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'shop-item';
+
+            // LÓGICA DE DESHABILITAR:
+            // El botón se bloquea si: ya está comprado O si ya tiene algo mejor
+            const yaTieneAlgoMejor = item.power > 1 && item.power < maxPowerBought;
+            const estaBloqueado = item.bought || yaTieneAlgoMejor;
+
+            div.innerHTML = `
+                <span><b>${item.name}</b> (Coste: ${item.cost})</span>
+                <button class="shop-btn" onclick="buyMultiplier(${index})" ${estaBloqueado ? 'disabled' : ''}>
+                    ${item.bought ? 'Actual' : (yaTieneAlgoMejor ? 'Superado' : 'Comprar')}
+                </button>
+            `;
+            mList.appendChild(div);
+        });
+
+        // ... (aquí sigue el código de los autoclickers que no cambia)
+    }
+
+        function buyMultiplier(i) {
+        const item = multipliers[i];
+        
+        if (score >= item.cost && !item.bought) {
+            score -= item.cost;
+            item.bought = true;
+
+            // Desbloqueos especiales
+            if (item.id === 'bonus_unlock') {
+                bonusDesbloqueado = true;
+            } else if (item.id === 'gold_unlock') {
+                goldHeartUnlocked = true;
+            } else if (item.power > 1) {
+                // ACTUALIZAMOS EL PODER:
+                // Solo lo cambiamos si la nueva mejora es superior a la actual
+                if (item.power > clickPower) {
+                    clickPower = item.power;
+                }
+            }
+
+            renderShop();
+            updateUI();
+            saveGame();
+        }
+    }
+
+        function buyAuto(i) {
+            if (score >= autoClickers[i].cost) {
+                score -= autoClickers[i].cost;
+                autoClickers[i].count++;
+                autoClickPerSecond += autoClickers[i].eps;
+                autoClickers[i].cost = Math.ceil(autoClickers[i].cost * 1.5);
+                renderShop();
+                updateUI();
+                saveGame();
+            }
+        }
+
+        heartBtn.addEventListener('click', (e) => {
+            score += clickPower;
+            updateUI();
+            createFloatingText(e.clientX, e.clientY, `+${clickPower}`);
+
+            saveGame();
+        });
+
+        function updateUI() {
+            scoreEl.innerText = Math.floor(score);
+            perSecondEl.innerText = `Amor por segundo: ${autoClickPerSecond}`;
+        }
+
+        function createFloatingText(x, y, txt) {
+            const el = document.createElement('div');
+            el.className = 'floater';
+            el.style.left = x + 'px'; el.style.top = y + 'px';
+            el.innerText = txt;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+
+        // --- IMAGEN SORPRESA ---
+        function spawnBonus() {
+            if (!bonusDesbloqueado) return;
+            
+            if (Math.random() > 0.6) { // 40% de probabilidad de aparecer
+
+                const indiceAleatorio = Math.floor(Math.random() * misImagenesBonus.length);
+                bonusImg.src = misImagenesBonus[indiceAleatorio];
+
+                const x = Math.random() * (window.innerWidth - 100);
+                const y = Math.random() * (window.innerHeight - 100);
+                
+                bonusImg.style.left = x + 'px';
+                bonusImg.style.top = y + 'px';
+                bonusImg.style.display = 'block';
+
+                // Variable para saber si se hizo click o no
+                let clickeado = false;
+                
+                // Al hacer click, marcamos como clickeado
+                bonusImg.onclick = function() {
+                    clickeado = true;
+                    clickBonus(); 
+                };
+
+                // Tiempo límite: 4 segundos
+                setTimeout(() => {
+                    if (!clickeado && bonusImg.style.display === 'block') {
+                        // PENALIZACIÓN: Si no clicó, restamos puntos
+                        const resta = Math.floor(score * 0.09) + 28; // Resta el 5% o mínimo 10 puntos
+                        score = Math.max(0, score - resta); // Evita que el puntaje sea menor a 0
+                        
+                        alert("¡Oh no! El Mini Dino se escapó y perdiste " + resta + " ❤️");
+                        
+                        bonusImg.style.display = 'none';
+                        updateUI();
+                        saveGame();
+                    }
+                }, 4000); // 4000ms = 4 segundos para reaccionar
+            }
+        }
+
+        function clickBonus() {
+            const bonus = Math.floor(score * 0.13) + 28;
+            score += bonus;
+            bonusImg.style.display = 'none';
+            alert("¡Cazaste al Mini Dino! Ganaste " + bonus + " ❤️");
+            updateUI();
+            saveGame();
+        }
+
+        /* --- CORAZÓN DORADO --- */
+
+        function spawnGoldHeart() {
+            if (!goldHeartUnlocked) return;
+            // PROBABILIDAD BAJA: 10% cada vez que se intenta (más difícil que el otro)
+            if (Math.random() > 0.9) { 
+                
+                // 1. Aparece
+                goldHeart.style.display = 'block';
+                
+                // 2. Empieza a moverse inmediatamente
+                moveGoldHeartRandomly();
+                
+                // 3. Configurar movimiento continuo cada 0.8 segundos
+                moveInterval = setInterval(moveGoldHeartRandomly, 800);
+
+                // 4. TIEMPO DE VIDA: Dura más tiempo (8 segundos)
+                setTimeout(() => {
+                    if (goldHeart.style.display === 'block') {
+                        despawnGoldHeart(); // Se va si no lo atrapas
+                    }
+                }, 8000); 
+            }
+        }
+
+        // Función para moverlo a una posición aleatoria
+        function moveGoldHeartRandomly() {
+            const x = Math.random() * (window.innerWidth - 80);
+            const y = Math.random() * (window.innerHeight - 80);
+            
+            goldHeart.style.left = x + 'px';
+            goldHeart.style.top = y + 'px';
+        }
+
+        // Función para esconderlo y limpiar el movimiento
+        function despawnGoldHeart() {
+            goldHeart.style.display = 'none';
+            clearInterval(moveInterval); // Importante: Deja de calcular movimientos
+        }
+
+        // AL HACER CLICK
+        goldHeart.onclick = function() {
+            // RECOMPENSA MASIVA: 1000 puntos + 10% de tus puntos actuales
+            const premio = 1000 + Math.floor(score * 0.10);
+            score += premio;
+            
+            alert("¡INCREÍBLE! ¡Atrapaste el Corazón Legendario! + " + premio + " ❤️");
+            
+            despawnGoldHeart();
+            updateUI();
+            saveGame(); // Guardar inmediatamente
+        };
+
+        // --- AGREGAR AL BUCLE PRINCIPAL ---
+        // Intentar que aparezca cada 40 segundos (el doble que el normal)
+        setInterval(spawnGoldHeart, 40000);
+        // --- BUCLES ---
+        setInterval(() => { score += autoClickPerSecond; updateUI(); }, 1000);
+        setInterval(spawnBonus, 20000); // Aparece cada 20 seg aprox.
+        setInterval(saveGame, 5000);    // Auto-guardado cada 5 seg.
+
+        // Iniciar
+        loadGame();
+        renderShop();
+        updateUI();
+    </script>
+</body>
+</html>
