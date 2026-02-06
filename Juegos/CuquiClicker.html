@@ -97,9 +97,7 @@
             font-weight: bold;
         }
 
-        .shop-btn:disabled { background: #ddd; }
-
-        /* --- AQUÍ SE DEFINE EL ESTILO DE LA IMAGEN QUE APARECE --- */
+        /* --- IMAGEN SORPRESA Y CORAZÓN DORADO --- */
         #bonus-img {
             position: absolute;
             width: 80px;
@@ -112,19 +110,13 @@
 
         #gold-heart {
             position: absolute;
-            width: 70px;  /* Un poco más pequeño para que sea difícil */
+            width: 70px;
             height: 70px;
-            display: none; /* Oculto por defecto */
-            z-index: 2000; /* Por encima de TODO */
+            display: none;
+            z-index: 2000;
             cursor: pointer;
-            /* Esta línea hace la magia del movimiento suave: */
             transition: top 1s linear, left 1s linear; 
-            filter: drop-shadow(0 0 15px #ffd700); /* Brillo dorado */
-        }
-
-        /* Efecto al hacer click */
-        #gold-heart:active {
-            transform: scale(0.8);
+            filter: drop-shadow(0 0 15px #ffd700);
         }
 
         @keyframes wiggle {
@@ -145,20 +137,11 @@
             100% { transform: translateY(-50px); opacity: 0; }
         }
 
-
         @media (max-width: 700px) {
-            .game-layout {
-                flex-direction: column;
-                height: auto;
-            }
-            .shop-zone {
-                max-height: 400px;
-            }
-            .bonus-img {
-                width: 60px;
-                height: 60px;
-            }
+            .game-layout { flex-direction: column; height: auto; }
+            .shop-zone { max-height: 400px; }
         }
+
         * {
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
@@ -177,37 +160,43 @@
         </div>
 
         <div class="shop-zone">
-            <h3>Mejoras de Click (1 sola vez)</h3>
+            <h3>Fuerza de Click</h3>
             <div id="multipliers-list"></div>
+
+            <h3>Mejoras Especiales</h3>
+            <div id="special-list"></div> 
+
             <h3>Ayuditas Automáticas</h3>
             <div id="autoclickers-list"></div>
+            
             <br>
             <button onclick="resetGame()" style="background:none; border:none; color: #ccc; cursor:pointer; font-size: 0.7rem;">Reiniciar todo el progreso</button>
         </div>
     </div>
 
     <img id="gold-heart" src="https://static.vecteezy.com/system/resources/thumbnails/052/295/257/small/golden-heart-figure-3d-illustration-isolated-on-the-transparent-background-png.png" alt="Golden Heart">
-    <img id="bonus-img" src="https://png.pngtree.com/recommend-works/png-clipart/20250321/ourmid/pngtree-cute-illustration-of-baby-dinosaur-png-image_15832645.png" alt="Bonus" onclick="clickBonus()">
+    <img id="bonus-img" src="" alt="Bonus">
+
     <script>
+        // --- VARIABLES GLOBALES ---
         let score = 0;
         let clickPower = 1;
         let autoClickPerSecond = 0;
         let bonusDesbloqueado = false;
-        let goldenheart = false;
+        let goldHeartUnlocked = false; // Corregido el nombre para que coincida con la lógica
 
         const multipliers = [
             { id: 'bonus_unlock', name: "Mini Dinos", cost: 150, power: 1, bought: false },
-            { id: 'golden_heart', name: "Corazón Dorado", cost: 750, power: 1, bought: false },
+            { id: 'gold_unlock', name: "Corazón Dorado", cost: 750, power: 1, bought: false },
             { id: 'm1', name: "Doble Click", cost: 120, power: 2, bought: false },
             { id: 'm2', name: "Triple Click", cost: 280, power: 3, bought: false },
             { id: 'm3', name: "Click x4", cost: 560, power: 4, bought: false },
             { id: 'm4', name: "Click x5", cost: 1280, power: 5, bought: false },
             { id: 'm5', name: "Click x6", cost: 2130, power: 6, bought: false },
-            { id: 'm6', name: "Click x7", cost: 3230, power: 7, bought: false },
-            { id: 'm7', name: "Click x8", cost: 4500, power: 8, bought: false },
-            { id: 'm8', name: "Click x9", cost: 5120, power: 9, bought: false },
-            { id: 'm10', name: "Super Click x10", cost: 8000, power: 10, bought: false }
-            
+            { id: 'm6', name: "Click x7", cost: 3500, power: 7, bought: false },
+            { id: 'm7', name: "Click x8", cost: 5600, power: 8, bought: false },
+            { id: 'm8', name: "Click x9", cost: 9000, power: 9, bought: false },
+            { id: 'm9', name: "Click x10", cost: 15000, power: 10, bought: false }
         ];
 
         const autoClickers = [
@@ -216,14 +205,11 @@
             { id: 'a3', name: "Siempre en mi mente", cost: 5000, eps: 50, count: 0 }
         ];
         
-        // Imágenes sorpresa
         const misImagenesBonus = [
-            "https://png.pngtree.com/recommend-works/png-clipart/20250321/ourmid/pngtree-cute-illustration-of-baby-dinosaur-png-image_15832645.png", // Imagen 1 (Bronto 1)
-            "https://images.vexels.com/media/users/3/322428/isolated/preview/038bef0d3e89523cad0e5d87b7e9115e-dinosaurio-caminando-con-regalos-de-cumpleanos-en-la-espalda.png", // Imagen 2 (Bronto fiestero)
-            "https://i.pinimg.com/originals/e3/44/3b/e3443b8fa09fbcf54ae07a6d8c39ab87.png",  // Imagen 3 (Rex chiquito)
-            "https://i.pinimg.com/originals/d5/0a/38/d50a3847d37ae4abeb8adf5e69894d9f.png",  // Imagen 4 (Dino dormido)
-            "https://i.pinimg.com/originals/41/46/20/41462030e2edf492b1a78f56ffd34322.png",  // Imagen 5 (Dino RAWR)
-            "https://images.vexels.com/media/users/3/322425/isolated/preview/ec57c9dc79af8a5e9a5396ff2660fd21-dinosaurio-con-globos-de-cumpleanos-en-la-cola.png" // Imagen 6 (Estego fiestero)
+            "https://png.pngtree.com/recommend-works/png-clipart/20250321/ourmid/pngtree-cute-illustration-of-baby-dinosaur-png-image_15832645.png",
+            "https://images.vexels.com/media/users/3/322428/isolated/preview/038bef0d3e89523cad0e5d87b7e9115e-dinosaurio-caminando-con-regalos-de-cumpleanos-en-la-espalda.png",
+            "https://i.pinimg.com/originals/e3/44/3b/e3443b8fa09fbcf54ae07a6d8c39ab87.png",
+            "https://i.pinimg.com/originals/d5/0a/38/d50a3847d37ae4abeb8adf5e69894d9f.png"
         ];
 
         const scoreEl = document.getElementById('score');
@@ -231,14 +217,11 @@
         const heartBtn = document.getElementById('main-heart');
         const bonusImg = document.getElementById('bonus-img');
         const goldHeart = document.getElementById('gold-heart');
-        let moveInterval; // Variable para controlar el movimiento
-        
-        // --- LÓGICA DE LOCAL STORAGE (GUARDADO) ---
+        let moveInterval;
 
+        // --- SISTEMA DE GUARDADO ---
         function saveGame() {
-            const data = {
-                score, clickPower, autoClickPerSecond, multipliers, autoClickers, bonusDesbloqueado, goldenheart
-            };
+            const data = { score, clickPower, autoClickPerSecond, multipliers, autoClickers, bonusDesbloqueado, goldHeartUnlocked };
             localStorage.setItem('amorData', JSON.stringify(data));
         }
 
@@ -250,99 +233,96 @@
                 clickPower = data.clickPower;
                 autoClickPerSecond = data.autoClickPerSecond;
                 bonusDesbloqueado = data.bonusDesbloqueado || false;
-                goldenheart = data.goldenheart || false;
-                data.multipliers.forEach((m, i) => Object.assign(multipliers[i], m));
-                data.autoClickers.forEach((a, i) => Object.assign(autoClickers[i], a));
+                goldHeartUnlocked = data.goldHeartUnlocked || false;
+                data.multipliers.forEach((m, i) => { if(multipliers[i]) Object.assign(multipliers[i], m); });
+                data.autoClickers.forEach((a, i) => { if(autoClickers[i]) Object.assign(autoClickers[i], a); });
             }
         }
 
         function resetGame() {
-            if(confirm("¿Seguro que quieres borrar todo el amor acumulado?")) {
+            if(confirm("¿Seguro que quieres borrar todo?")) {
                 localStorage.removeItem('amorData');
                 location.reload();
             }
         }
 
-        // --- FUNCIONES DE TIENDA Y CLICK ---
-
+        // --- RENDERIZADO DE TIENDA ---
         function renderShop() {
-        const mList = document.getElementById('multipliers-list');
-        mList.innerHTML = '';
+            const mList = document.getElementById('multipliers-list');
+            const sList = document.getElementById('special-list');
+            const aList = document.getElementById('autoclickers-list');
+            
+            mList.innerHTML = ''; sList.innerHTML = ''; aList.innerHTML = '';
 
-        // Encontramos cuál es el poder de click más alto que ya ha comprado
-        // (Ignoramos los que tienen power 1 porque son desbloqueos de bonus)
-        let maxPowerBought = 1;
-        multipliers.forEach(m => {
-            if (m.bought && m.power > maxPowerBought) {
-                maxPowerBought = m.power;
-            }
-        });
+            let maxPowerOwned = 1;
+            multipliers.forEach(m => {
+                if (m.bought && m.power > maxPowerOwned) maxPowerOwned = m.power;
+            });
 
-        multipliers.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = 'shop-item';
+            multipliers.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'shop-item';
 
-            // LÓGICA DE DESHABILITAR:
-            // El botón se bloquea si: ya está comprado O si ya tiene algo mejor
-            const yaTieneAlgoMejor = item.power > 1 && item.power < maxPowerBought;
-            const estaBloqueado = item.bought || yaTieneAlgoMejor;
+                if (item.id.includes('unlock')) {
+                    div.innerHTML = `
+                        <span><b>${item.name}</b> (${item.cost} ❤️)</span>
+                        <button class="shop-btn" onclick="buyMultiplier(${index})">${item.bought ? 'Desbloqueado' : 'Comprar'}</button>
+                    `;
+                    sList.appendChild(div);
+                } else {
+                    const esLaMejor = item.bought && item.power === maxPowerOwned;
+                    const esAntigua = item.bought && item.power < maxPowerOwned;
+                    let textoBoton = item.bought ? (esLaMejor ? "Actual" : "Superado") : "Comprar";
 
-            div.innerHTML = `
-                <span><b>${item.name}</b> (Coste: ${item.cost})</span>
-                <button class="shop-btn" onclick="buyMultiplier(${index})" ${estaBloqueado ? 'disabled' : ''}>
-                    ${item.bought ? 'Actual' : (yaTieneAlgoMejor ? 'Superado' : 'Comprar')}
-                </button>
-            `;
-            mList.appendChild(div);
-        });
+                    div.innerHTML = `
+                        <span><b>${item.name}</b> (${item.cost} ❤️)</span>
+                        <button class="shop-btn" onclick="buyMultiplier(${index})">${textoBoton}</button>
+                    `;
+                    mList.appendChild(div);
+                }
+            });
 
-        // ... (aquí sigue el código de los autoclickers que no cambia)
-    }
+            autoClickers.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'shop-item';
+                div.innerHTML = `
+                    <div class="item-info"><b>${item.name}</b><br><small>+${item.eps}/s | Tienes: ${item.count}</small></div>
+                    <button class="shop-btn" onclick="buyAuto(${index})">${item.cost} ❤️</button>
+                `;
+                aList.appendChild(div);
+            });
+        }
 
         function buyMultiplier(i) {
-        const item = multipliers[i];
-        
-        if (score >= item.cost && !item.bought) {
-            score -= item.cost;
-            item.bought = true;
+            const item = multipliers[i];
+            if (item.bought && (item.id.includes('unlock') || item.power <= clickPower)) return;
 
-            // Desbloqueos especiales
-            if (item.id === 'bonus_unlock') {
-                bonusDesbloqueado = true;
-            } else if (item.id === 'gold_unlock') {
-                goldHeartUnlocked = true;
-            } else if (item.power > 1) {
-                // ACTUALIZAMOS EL PODER:
-                // Solo lo cambiamos si la nueva mejora es superior a la actual
-                if (item.power > clickPower) {
-                    clickPower = item.power;
-                }
-            }
-
-            renderShop();
-            updateUI();
-            saveGame();
+            if (score >= item.cost) {
+                score -= item.cost;
+                item.bought = true;
+                if (item.id === 'bonus_unlock') bonusDesbloqueado = true;
+                if (item.id === 'gold_unlock') goldHeartUnlocked = true;
+                if (item.power > clickPower) clickPower = item.power;
+                renderShop(); updateUI(); saveGame();
+            } else { alert("¡Necesitas más amor! ❤️"); }
         }
-    }
 
         function buyAuto(i) {
-            if (score >= autoClickers[i].cost) {
-                score -= autoClickers[i].cost;
-                autoClickers[i].count++;
-                autoClickPerSecond += autoClickers[i].eps;
-                autoClickers[i].cost = Math.ceil(autoClickers[i].cost * 1.5);
-                renderShop();
-                updateUI();
-                saveGame();
-            }
+            const item = autoClickers[i];
+            if (score >= item.cost) {
+                score -= item.cost;
+                item.count++;
+                autoClickPerSecond += item.eps;
+                item.cost = Math.ceil(item.cost * 1.5);
+                renderShop(); updateUI(); saveGame();
+            } else { alert("¡Necesitas más amor! ❤️"); }
         }
 
+        // --- INTERACCIÓN ---
         heartBtn.addEventListener('click', (e) => {
             score += clickPower;
             updateUI();
             createFloatingText(e.clientX, e.clientY, `+${clickPower}`);
-
-            saveGame();
         });
 
         function updateUI() {
@@ -359,119 +339,73 @@
             setTimeout(() => el.remove(), 800);
         }
 
-        // --- IMAGEN SORPRESA ---
+        // --- EVENTOS ESPECIALES ---
         function spawnBonus() {
-            if (!bonusDesbloqueado) return;
-            
-            if (Math.random() > 0.6) { // 40% de probabilidad de aparecer
-
-                const indiceAleatorio = Math.floor(Math.random() * misImagenesBonus.length);
-                bonusImg.src = misImagenesBonus[indiceAleatorio];
-
-                const x = Math.random() * (window.innerWidth - 100);
-                const y = Math.random() * (window.innerHeight - 100);
-                
-                bonusImg.style.left = x + 'px';
-                bonusImg.style.top = y + 'px';
+            if (!bonusDesbloqueado || bonusImg.style.display === 'block') return;
+            if (Math.random() > 0.6) {
+                const indice = Math.floor(Math.random() * misImagenesBonus.length);
+                bonusImg.src = misImagenesBonus[indice];
+                bonusImg.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+                bonusImg.style.top = Math.random() * (window.innerHeight - 100) + 'px';
                 bonusImg.style.display = 'block';
 
-                // Variable para saber si se hizo click o no
                 let clickeado = false;
-                
-                // Al hacer click, marcamos como clickeado
-                bonusImg.onclick = function() {
-                    clickeado = true;
-                    clickBonus(); 
-                };
+                bonusImg.onclick = () => { clickeado = true; clickBonus(); };
 
-                // Tiempo límite: 4 segundos
                 setTimeout(() => {
                     if (!clickeado && bonusImg.style.display === 'block') {
-                        // PENALIZACIÓN: Si no clicó, restamos puntos
-                        const resta = Math.floor(score * 0.09) + 28; // Resta el 5% o mínimo 10 puntos
-                        score = Math.max(0, score - resta); // Evita que el puntaje sea menor a 0
-                        
-                        alert("¡Oh no! El Mini Dino se escapó y perdiste " + resta + " ❤️");
-                        
+                        const resta = Math.floor(score * 0.05) + 10;
+                        score = Math.max(0, score - resta);
                         bonusImg.style.display = 'none';
+                        alert("¡Se escapó! Perdiste " + resta + " ❤️");
                         updateUI();
-                        saveGame();
                     }
-                }, 4000); // 4000ms = 4 segundos para reaccionar
+                }, 4000);
             }
         }
 
         function clickBonus() {
-            const bonus = Math.floor(score * 0.13) + 28;
-            score += bonus;
+            const premio = Math.floor(score * 0.1) + 50;
+            score += premio;
             bonusImg.style.display = 'none';
-            alert("¡Cazaste al Mini Dino! Ganaste " + bonus + " ❤️");
+            alert("¡Atrapado! Ganaste " + premio + " ❤️");
             updateUI();
-            saveGame();
         }
 
-        /* --- CORAZÓN DORADO --- */
-
         function spawnGoldHeart() {
-            if (!goldHeartUnlocked) return;
-            // PROBABILIDAD BAJA: 10% cada vez que se intenta (más difícil que el otro)
-            if (Math.random() > 0.9) { 
-                
-                // 1. Aparece
+            if (!goldHeartUnlocked || goldHeart.style.display === 'block') return;
+            if (Math.random() > 0.8) { 
                 goldHeart.style.display = 'block';
-                
-                // 2. Empieza a moverse inmediatamente
                 moveGoldHeartRandomly();
-                
-                // 3. Configurar movimiento continuo cada 0.8 segundos
-                moveInterval = setInterval(moveGoldHeartRandomly, 800);
-
-                // 4. TIEMPO DE VIDA: Dura más tiempo (8 segundos)
-                setTimeout(() => {
-                    if (goldHeart.style.display === 'block') {
-                        despawnGoldHeart(); // Se va si no lo atrapas
-                    }
-                }, 8000); 
+                moveInterval = setInterval(moveGoldHeartRandomly, 1000);
+                setTimeout(() => { despawnGoldHeart(); }, 8000);
             }
         }
 
-        // Función para moverlo a una posición aleatoria
         function moveGoldHeartRandomly() {
-            const x = Math.random() * (window.innerWidth - 80);
-            const y = Math.random() * (window.innerHeight - 80);
-            
-            goldHeart.style.left = x + 'px';
-            goldHeart.style.top = y + 'px';
+            goldHeart.style.left = Math.random() * (window.innerWidth - 80) + 'px';
+            goldHeart.style.top = Math.random() * (window.innerHeight - 80) + 'px';
         }
 
-        // Función para esconderlo y limpiar el movimiento
         function despawnGoldHeart() {
             goldHeart.style.display = 'none';
-            clearInterval(moveInterval); // Importante: Deja de calcular movimientos
+            clearInterval(moveInterval);
         }
 
-        // AL HACER CLICK
-        goldHeart.onclick = function() {
-            // RECOMPENSA MASIVA: 1000 puntos + 10% de tus puntos actuales
-            const premio = 1000 + Math.floor(score * 0.10);
+        goldHeart.onclick = () => {
+            const premio = 500 + Math.floor(score * 0.15);
             score += premio;
-            
-            alert("¡INCREÍBLE! ¡Atrapaste el Corazón Legendario! + " + premio + " ❤️");
-            
+            alert("✨ ¡CORAZÓN LEGENDARIO! + " + premio + " ❤️ ✨");
             despawnGoldHeart();
             updateUI();
-            saveGame(); // Guardar inmediatamente
         };
 
-        // --- AGREGAR AL BUCLE PRINCIPAL ---
-        // Intentar que aparezca cada 40 segundos (el doble que el normal)
-        setInterval(spawnGoldHeart, 40000);
         // --- BUCLES ---
         setInterval(() => { score += autoClickPerSecond; updateUI(); }, 1000);
-        setInterval(spawnBonus, 20000); // Aparece cada 20 seg aprox.
-        setInterval(saveGame, 5000);    // Auto-guardado cada 5 seg.
+        setInterval(spawnBonus, 15000);
+        setInterval(spawnGoldHeart, 30000);
+        setInterval(saveGame, 10000);
 
-        // Iniciar
         loadGame();
         renderShop();
         updateUI();
