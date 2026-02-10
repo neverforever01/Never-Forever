@@ -30,6 +30,7 @@
             font-size: 2.2rem;
             margin-top: 20px;
             text-shadow: 2px 2px white;
+            z-index: 10;
         }
 
         .game-layout {
@@ -39,6 +40,7 @@
             width: 95%;
             height: 80vh;
             margin-top: 10px;
+            z-index: 10;
         }
 
         .click-zone {
@@ -130,6 +132,7 @@
             font-weight: bold;
             animation: floatUp 0.8s ease-out forwards;
             pointer-events: none;
+            z-index: 3000;
         }
 
         @keyframes floatUp {
@@ -137,9 +140,39 @@
             100% { transform: translateY(-50px); opacity: 0; }
         }
 
+        /* --- NUEVO: GALERÍA DE AUTOCLICKERS (ABAJO IZQUIERDA) --- */
+        #gallery-container {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 350px;
+            height: 400px; /* Altura máxima antes de hacer scroll o cortar */
+            display: flex;
+            flex-wrap: wrap-reverse; /* Se apilan de abajo hacia arriba */
+            align-content: flex-start;
+            gap: 5px;
+            pointer-events: none; /* Para que no molesten al click */
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .gallery-item {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         @media (max-width: 700px) {
-            .game-layout { flex-direction: column; height: auto; }
+            .game-layout { flex-direction: column; height: auto; padding-bottom: 220px; } /* Padding extra para no tapar la galería */
             .shop-zone { max-height: 400px; }
+            #gallery-container { width: 100%; height: 150px; bottom: 0; left: 0; padding: 10px; box-sizing: border-box; background: linear-gradient(to top, rgba(255,255,255,0.8), transparent); }
         }
 
         * {
@@ -176,6 +209,8 @@
 
     <img id="gold-heart" src="https://static.vecteezy.com/system/resources/thumbnails/052/295/257/small/golden-heart-figure-3d-illustration-isolated-on-the-transparent-background-png.png" alt="Golden Heart">
     <img id="bonus-img" src="" alt="Bonus">
+    
+    <div id="gallery-container"></div>
 
     <script>
         // --- VARIABLES GLOBALES ---
@@ -183,7 +218,73 @@
         let clickPower = 1;
         let autoClickPerSecond = 0;
         let bonusDesbloqueado = false;
-        let goldHeartUnlocked = false; // Corregido el nombre para que coincida con la lógica
+        let goldHeartUnlocked = false;
+
+        // Aquí guardaremos las URLs de las imágenes compradas
+        let collectedImages = []; 
+
+        // --- BANCO DE IMÁGENES CUQUIS ---
+        
+        const imagenesFugaces = [
+            "https://st5.depositphotos.com/1742172/80986/p/450/depositphotos_809863680-stock-photo-freehand-drawn-thought-bubble-cartoon.png",
+            "https://st5.depositphotos.com/1742172/80839/p/450/depositphotos_808394580-stock-photo-cartoon-love-heart-thought-bubble.png",
+            "https://static.vecteezy.com/system/resources/thumbnails/044/989/943/small/cartoon-love-heart-with-thought-bubble-as-a-printed-sticker-png.png",
+            "https://static.vecteezy.com/system/resources/thumbnails/045/294/906/small/cartoon-love-heart-character-and-thought-bubble-as-a-printed-sticker-png.png",
+            "https://st5.depositphotos.com/1742172/80700/p/450/depositphotos_807008122-stock-photo-cartoon-love-hearts-thought-bubble.png"  
+        ];
+
+        const imagenesCartas = [
+            "https://cdn-icons-png.flaticon.com/512/3507/3507554.png",
+            "https://cdn-icons-png.flaticon.com/512/3894/3894401.png",
+            "https://png.pngtree.com/png-clipart/20220131/original/pngtree-cartoon-two-love-letters-which-is-one-element-of-valentine-png-image_7258522.png",
+            "https://cdn-icons-png.flaticon.com/512/3894/3894401.png"
+        ];
+
+        const imagenesMente = [
+            "https://cdn-icons-png.flaticon.com/512/2525/2525360.png",
+            "https://cdn-icons-png.flaticon.com/512/4125/4125782.png",
+            "https://cdn-icons-png.flaticon.com/512/8486/8486884.png",
+            "https://cdn-icons-png.freepik.com/512/12637/12637539.png",
+            "https://cdn-icons-png.flaticon.com/512/5526/5526393.png",
+            "https://cdn-icons-png.flaticon.com/512/7407/7407437.png"
+        ];
+
+        const imagenesCapybara = [
+            "https://images.vexels.com/media/users/3/358506/isolated/preview/2a24ff7a531d6c910525bbe97a76d2a4-ilustracion-de-un-lindo-koala-de-dibujos-animados-comiendo-sandia.png",
+            "https://images.vexels.com/media/users/3/318410/isolated/preview/eba4aa0cd5cf829edb21df16da01a6a4-lindo-carpincho-jugando-con-una-mariposa.png",
+            "https://i.pinimg.com/originals/8e/34/11/8e3411c8a7cd71d35a5b622ade0b9f33.png",
+            "https://images.vexels.com/media/users/3/318414/isolated/preview/488949fc3555ba9f5c3d7a5b0130719a-carpincho-cargando-pollitos-en-la-espalda.png",
+            "https://image.spreadshirtmedia.net/image-server/v1/compositions/T1459A839PA4459PT28X8Y0D328406523W8333H10000/views/1.webp?appearanceId=839&width=300&height=450",
+            "https://image.spreadshirtmedia.net/image-server/v1/compositions/T1459A839PA4459PT28X0Y0D323875109W10000H10000/views/1/al-lindo-capibara-le-encanta-beber-te-de-burbujas.webp?appearanceId=839&width=300&height=450",
+            "https://cdn-icons-png.flaticon.com/256/10776/10776375.png",
+            "https://i.pinimg.com/originals/d4/e9/55/d4e9554f37ba02eb7a55ad43747a5f44.png",
+            "https://vaylenstore.com/cdn/shop/collections/Gemini_Generated_Image_ttru5jttru5jttru.png?v=1760333387",
+            "https://d22fxaf9t8d39k.cloudfront.net/92a538d5056349831ce53bd383a03c0bb5434326c87dd8ee007df68ed69afbbf313909.png",
+            "https://d22fxaf9t8d39k.cloudfront.net/d0b9f68380cd252c9305f807382f7a2c0a08ec1f74808235448a4e3537560d36313909.png",
+            "https://acdn-us.mitiendanube.com/stores/005/437/778/products/3e1e9bc1-ef54-4159-a0ce-1f4fec26a67c-convertido-01-c5d290a8bee5d00d7317435382817647-640-0.webp",
+            "https://acdn-us.mitiendanube.com/stores/005/437/778/products/6fc62fe1-df06-4248-b7f4-625877b67408-convertido-02-d98e9ccb6e785e264717435387670378-480-0.webp",
+            "https://acdn-us.mitiendanube.com/stores/005/437/778/products/3e1e9bc1-ef54-4159-a0ce-1f4fec26a67c-convertido-02-e928816110359806c517435386916628-480-0.webp"
+        ];
+
+        const imagenesCositas = [
+            "https://images.vexels.com/media/users/3/271236/isolated/preview/0a041ba018e1ed91cb959c3c5495da0b-lindo-gato-unicornio-en-un-arco-iris.png",
+            "https://images.vexels.com/media/users/3/271234/isolated/preview/43ce062bb5ef7e4cdf7067ca66ba2dbe-dibujos-animados-lindo-gato-unicornio.png",
+            "https://png.pngtree.com/png-vector/20250425/ourmid/pngtree-adorable-cartoon-unicorn-with-colorful-mane-and-hearts-png-image_16100986.png",
+            "https://png.pngtree.com/png-clipart/20230623/original/pngtree-cartoon-rose-png-image_9204818.png",
+            "https://cdn-icons-png.flaticon.com/256/10757/10757425.png",
+            "https://cdn-icons-png.flaticon.com/256/10757/10757450.png",
+            "https://cdn-icons-png.flaticon.com/512/6420/6420762.png",
+            "https://cdn-icons-png.flaticon.com/512/10757/10757395.png",
+            "https://cdn-icons-png.flaticon.com/512/6187/6187446.png"
+        ]
+        const misImagenesBonus = [
+            "https://png.pngtree.com/recommend-works/png-clipart/20250321/ourmid/pngtree-cute-illustration-of-baby-dinosaur-png-image_15832645.png",
+            "https://images.vexels.com/media/users/3/322428/isolated/preview/038bef0d3e89523cad0e5d87b7e9115e-dinosaurio-caminando-con-regalos-de-cumpleanos-en-la-espalda.png",
+            "https://i.pinimg.com/originals/e3/44/3b/e3443b8fa09fbcf54ae07a6d8c39ab87.png",
+            "https://i.pinimg.com/originals/d5/0a/38/d50a3847d37ae4abeb8adf5e69894d9f.png"
+        ];
+
+        
 
         const multipliers = [
             { id: 'bonus_unlock', name: "Mini Dinos", cost: 150, power: 1, bought: false },
@@ -196,20 +297,20 @@
             { id: 'm6', name: "Click x7", cost: 3500, power: 7, bought: false },
             { id: 'm7', name: "Click x8", cost: 5600, power: 8, bought: false },
             { id: 'm8', name: "Click x9", cost: 9000, power: 9, bought: false },
-            { id: 'm9', name: "Click x10", cost: 15000, power: 10, bought: false }
+            { id: 'm9', name: "Click x10", cost: 15000, power: 10, bought: false },
+            { id: 'm10', name: "Click x15", cost: 23000, power: 11, bought: false },
+            { id: 'm11', name: "Click x20", cost: 40000, power: 12, bought: false },
+            { id: 'm12', name: "Click x25", cost: 65000, power: 13, bought: false },
+            { id: 'm13', name: "Click x30", cost: 90000, power: 14, bought: false },
+            { id: 'm14', name: "Click x50", cost: 150000, power: 15, bought: false }
         ];
 
         const autoClickers = [
-            { id: 'a1', name: "Pensamiento fugaz", cost: 200, eps: 1, count: 0 },
-            { id: 'a2', name: "Carta de amor", cost: 750, eps: 5, count: 0 },
-            { id: 'a3', name: "Siempre en mi mente", cost: 5000, eps: 50, count: 0 }
-        ];
-        
-        const misImagenesBonus = [
-            "https://png.pngtree.com/recommend-works/png-clipart/20250321/ourmid/pngtree-cute-illustration-of-baby-dinosaur-png-image_15832645.png",
-            "https://images.vexels.com/media/users/3/322428/isolated/preview/038bef0d3e89523cad0e5d87b7e9115e-dinosaurio-caminando-con-regalos-de-cumpleanos-en-la-espalda.png",
-            "https://i.pinimg.com/originals/e3/44/3b/e3443b8fa09fbcf54ae07a6d8c39ab87.png",
-            "https://i.pinimg.com/originals/d5/0a/38/d50a3847d37ae4abeb8adf5e69894d9f.png"
+            { id: 'a1', name: "Pensamiento fugaz", cost: 5, eps: 1, count: 0 },
+            { id: 'a2', name: "Capibara", cost: 7, eps: 5, count: 0 },
+            { id: 'a3', name: "Cositas", cost: 5, eps: 5, count: 0 },
+            { id: 'a4', name: "Carta de amor", cost: 7, eps: 5, count: 0 },
+            { id: 'a5', name: "Siempre en mi mente", cost: 5, eps: 50, count: 0 }
         ];
 
         const scoreEl = document.getElementById('score');
@@ -217,36 +318,124 @@
         const heartBtn = document.getElementById('main-heart');
         const bonusImg = document.getElementById('bonus-img');
         const goldHeart = document.getElementById('gold-heart');
+        const galleryContainer = document.getElementById('gallery-container');
         let moveInterval;
 
         // --- SISTEMA DE GUARDADO ---
         function saveGame() {
-            const data = { score, clickPower, autoClickPerSecond, multipliers, autoClickers, bonusDesbloqueado, goldHeartUnlocked };
+            const data = { 
+                score, 
+                clickPower, 
+                autoClickPerSecond, 
+                multipliers,
+                autoClickers, 
+                bonusDesbloqueado, 
+                goldHeartUnlocked,
+                collectedImages // Guardamos las imágenes conseguidas
+            };
             localStorage.setItem('amorData', JSON.stringify(data));
         }
 
         function loadGame() {
             const saved = localStorage.getItem('amorData');
             if (saved) {
-                const data = JSON.parse(saved);
-                score = data.score;
-                clickPower = data.clickPower;
-                autoClickPerSecond = data.autoClickPerSecond;
-                bonusDesbloqueado = data.bonusDesbloqueado || false;
-                goldHeartUnlocked = data.goldHeartUnlocked || false;
-                data.multipliers.forEach((m, i) => { if(multipliers[i]) Object.assign(multipliers[i], m); });
-                data.autoClickers.forEach((a, i) => { if(autoClickers[i]) Object.assign(autoClickers[i], a); });
+                try {
+                    const data = JSON.parse(saved);
+                    score = data.score || 0;
+                    clickPower = data.clickPower || 1;
+                    autoClickPerSecond = data.autoClickPerSecond || 0;
+                    bonusDesbloqueado = !!data.bonusDesbloqueado;
+                    goldHeartUnlocked = !!data.goldHeartUnlocked;
+                    collectedImages = data.collectedImages || []; // Cargar imágenes
+
+                    if (data.multipliers) {
+                        multipliers.forEach((m) => {
+                            const savedM = data.multipliers.find(sm => sm.id === m.id);
+                            if (savedM) m.bought = savedM.bought;
+                        });
+                    }
+
+                    if (data.autoClickers) {
+                        autoClickers.forEach((a) => {
+                            const savedA = data.autoClickers.find(sa => sa.id === a.id);
+                            if (savedA) {
+                                a.count = savedA.count;
+                                a.cost = savedA.cost;
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error al cargar los datos:", e);
+                }
             }
         }
 
         function resetGame() {
-            if(confirm("¿Seguro que quieres borrar todo?")) {
+            if(confirm("¿Seguro que quieres borrar todo tu progreso de amor? ❤️")) {
                 localStorage.removeItem('amorData');
                 location.reload();
             }
         }
 
-        // --- RENDERIZADO DE TIENDA ---
+        // --- FUNCIONES DE COMPRA ---
+        function buyMultiplier(i) {
+            const item = multipliers[i];
+            if (item.bought && (item.id.includes('unlock') || item.power <= clickPower)) return;
+
+            if (score >= item.cost) {
+                score -= item.cost;
+                item.bought = true;
+                if (item.id === 'bonus_unlock') bonusDesbloqueado = true;
+                if (item.id === 'gold_unlock') goldHeartUnlocked = true;
+                if (item.power > clickPower) clickPower = item.power;
+                
+                renderShop(); 
+                updateUI(); 
+                saveGame();
+            } else { 
+                alert("¡Necesitas más amor! ❤️"); 
+            }
+        }
+
+        function buyAuto(i) {
+            const item = autoClickers[i];
+            if (score >= item.cost) {
+                score -= item.cost;
+                item.count++;
+                autoClickPerSecond += item.eps;
+                item.cost = Math.ceil(item.cost * 1.5);
+                
+                // --- NUEVA LÓGICA VINCULADA ---
+                let arrayOrigen = [];
+
+                // Seleccionamos el array según el ID del item
+                if (item.id === 'a1') {
+                    arrayOrigen = imagenesFugaces;
+                } else if (item.id === 'a2') {
+                    arrayOrigen = imagenesCapybara;
+                } else if (item.id === 'a3') {
+                    arrayOrigen = imagenesCositas;
+                } else if (item.id === 'a4') {
+                    arrayOrigen = imagenesCartas;
+                } else if (item.id === 'a5') {
+                    arrayOrigen = imagenesMente;
+                }
+
+                // Si se encontró un array válido, cogemos una imagen al azar
+                if (arrayOrigen.length > 0) {
+                    const imagenAleatoria = arrayOrigen[Math.floor(Math.random() * arrayOrigen.length)];
+                    collectedImages.push(imagenAleatoria);
+                    renderGallery(); // Dibujar galería actualizada con la nueva imagen
+                }
+                
+                renderShop(); 
+                updateUI(); 
+                saveGame();
+            } else { 
+                alert("¡Necesitas más amor! ❤️"); 
+            }
+        }
+
         function renderShop() {
             const mList = document.getElementById('multipliers-list');
             const sList = document.getElementById('special-list');
@@ -271,9 +460,7 @@
                     sList.appendChild(div);
                 } else {
                     const esLaMejor = item.bought && item.power === maxPowerOwned;
-                    const esAntigua = item.bought && item.power < maxPowerOwned;
                     let textoBoton = item.bought ? (esLaMejor ? "Actual" : "Superado") : "Comprar";
-
                     div.innerHTML = `
                         <span><b>${item.name}</b> (${item.cost} ❤️)</span>
                         <button class="shop-btn" onclick="buyMultiplier(${index})">${textoBoton}</button>
@@ -293,29 +480,15 @@
             });
         }
 
-        function buyMultiplier(i) {
-            const item = multipliers[i];
-            if (item.bought && (item.id.includes('unlock') || item.power <= clickPower)) return;
-
-            if (score >= item.cost) {
-                score -= item.cost;
-                item.bought = true;
-                if (item.id === 'bonus_unlock') bonusDesbloqueado = true;
-                if (item.id === 'gold_unlock') goldHeartUnlocked = true;
-                if (item.power > clickPower) clickPower = item.power;
-                renderShop(); updateUI(); saveGame();
-            } else { alert("¡Necesitas más amor! ❤️"); }
-        }
-
-        function buyAuto(i) {
-            const item = autoClickers[i];
-            if (score >= item.cost) {
-                score -= item.cost;
-                item.count++;
-                autoClickPerSecond += item.eps;
-                item.cost = Math.ceil(item.cost * 1.5);
-                renderShop(); updateUI(); saveGame();
-            } else { alert("¡Necesitas más amor! ❤️"); }
+        // --- FUNCIÓN PARA DIBUJAR LA GALERÍA INFERIOR IZQUIERDA ---
+        function renderGallery() {
+            galleryContainer.innerHTML = ''; // Limpiar
+            collectedImages.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'gallery-item';
+                galleryContainer.appendChild(img);
+            });
         }
 
         // --- INTERACCIÓN ---
@@ -342,6 +515,7 @@
         // --- EVENTOS ESPECIALES ---
         function spawnBonus() {
             if (!bonusDesbloqueado || bonusImg.style.display === 'block') return;
+
             if (Math.random() > 0.6) {
                 const indice = Math.floor(Math.random() * misImagenesBonus.length);
                 bonusImg.src = misImagenesBonus[indice];
@@ -406,7 +580,9 @@
         setInterval(spawnGoldHeart, 30000);
         setInterval(saveGame, 10000);
 
+        // --- INICIALIZACIÓN ---
         loadGame();
+        renderGallery(); // Cargar imágenes guardadas
         renderShop();
         updateUI();
     </script>
