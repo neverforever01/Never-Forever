@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia</title>
+    <style>
+        /* --- DISEÑO ROMÁNTICO (CSS) --- */
+
+        /* Fondo general de la página con un degradado suave y tipografía elegante */
+        body {
+            font-family: 'Great Vibes', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Degradado muy suave */
+            background-color: #fff0f5; /* Color de respaldo: rosa lavanda pálido */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Para que los corazones no creen barras de desplazamiento */
+        }
+
+        /* Contenedor principal para centrarlo todo */
+        .main-container {
+            text-align: center;
+            z-index: 10; /* Asegura que esté por encima de los corazones de fondo */
+            background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px); /* Efecto de cristal esmerilado */
+            border: 1px solid rgba(255, 192, 203, 0.5); /* Borde rosa suave */
+        }
+
+        /* Título romántico */
+        h1 {
+            color: #d63384; /* Un rosa intenso, color amor */
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        p {
+            color: #7d7d7d;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        /* Diseño del campo de entrada (Input) */
+        #formulaInput {
+            font-family: 'Palatino Linotype', serif;
+            font-size: 1.5em;
+            padding: 15px 25px;
+            border: 2px solid #ffc0cb; /* Borde rosa claro */
+            border-radius: 50px; /* Bordes muy redondeados */
+            outline: none;
+            width: 300px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            color: #555;
+        }
+
+        /* Efecto al hacer clic en el input */
+        #formulaInput:focus {
+            border-color: #d63384; /* Rosa más intenso al enfocar */
+            box-shadow: 0 0 10px rgba(214, 51, 132, 0.2);
+        }
+
+        /* --- Estilos para el Gran Mensaje de "Amor" --- */
+        #resultContainer {
+            margin-top: 40px;
+            opacity: 0; /* Oculto por defecto */
+            transform: scale(0.5); /* Pequeño por defecto para la animación */
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animación suave */
+            display: none; /* No ocupa espacio cuando está oculto */
+        }
+
+        /* Cuando se muestra el resultado */
+        #resultContainer.show {
+            opacity: 1;
+            transform: scale(1);
+            display: block;
+        }
+
+        /* El texto "Amor" en grande */
+        .big-love {
+            font-family: 'Great Vibes', cursive;
+            font-size: 8em; /* ¡Muy grande! */
+            color: #d63384; /* Rosa intenso */
+            background: linear-gradient(to right, #ff416c, #ff4b2b); /* Degradado de rojo a naranja rosado */
+            -webkit-background-clip: text; /* Aplica el degradado al texto */
+            -webkit-text-fill-color: transparent; /* Hace el texto transparente para ver el degradado */
+            margin: 0;
+            line-height: 1;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+            animation: pulse 2s infinite; /* Animación de latido */
+        }
+
+        /* El sutil texto debajo */
+        .sub-text {
+            color: #ff69b4;
+            font-size: 3em;
+            font-style: italic;
+            margin-top: -10px;
+        }
+
+        /* Animación de latido para la palabra "Amor" */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- Corazones flotantes de fondo --- */
+        .heart {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.7); /* Rosa claro semi-transparente */
+            font-size: 20px;
+            animation: float 10s infinite linear;
+            bottom: -20px;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Fuentes elegantes de Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Open+Sans:wght@400;600&display=swap');
+
+    </style>
+</head>
+<body>
+
+    <div id="hearts-container"></div>
+
+    <div class="main-container">
+        <h1>Una Fórmula Simple</h1>
+        <p>Escribe nuestra ecuación favorita abajo...</p>
+        
+        <input type="text" id="formulaInput" placeholder="Escribe aquí: Tú + Yo" autofocus>
+
+        <div id="resultContainer">
+            <p class="sub-text">=</p>
+            <h2 class="big-love">Amor</h2>
+            
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA (JavaScript) ---
+
+        const input = document.getElementById('formulaInput');
+        const result = document.getElementById('resultContainer');
+
+        // Escucha cuando el usuario cambia el texto y presiona Enter o cambia de foco
+        input.addEventListener('change', function() {
+            // Convierte a minúsculas y quita espacios extra para que sea flexible
+            const valor = input.value.toLowerCase().trim();
+
+            // La "fórmula mágica" (aceptamos con tilde y sin tilde en "Tú")
+            if (valor === 'tu + yo' || valor === 'tú + yo') {
+                // Muestra el resultado con la animación
+                result.style.display = 'block'; // Asegura que ocupe espacio
+                // Un pequeño retraso para que la transición CSS funcione tras el display:block
+                setTimeout(() => {
+                    result.classList.add('show');
+                }, 10);
+                
+                // Opcional: Ocultar el input y el título inicial
+                // input.style.display = 'none';
+                // document.querySelector('h1').style.display = 'none';
+                // document.querySelector('p').style.display = 'none';
+            } else {
+                // Si escriben otra cosa, oculta el resultado
+                result.classList.remove('show');
+                setTimeout(() => {
+                    if (!result.classList.contains('show')) {
+                        result.style.display = 'none';
+                    }
+                }, 800); // Tiempo igual a la transición CSS
+            }
+        });
+
+        // --- Efecto extra: Corazones flotantes de fondo ---
+        const heartsContainer = document.getElementById('hearts-container');
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤'; // Carácter de corazón
+            heart.style.left = Math.random() * 100 + 'vw'; // Posición horizontal aleatoria
+            heart.style.animationDuration = Math.random() * 5 + 5 + 's'; // Velocidad aleatoria
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px'; // Tamaño aleatorio
+            
+            heartsContainer.appendChild(heart);
+
+            // Elimina el corazón después de que termina la animación
+            setTimeout(() => {
+                heart.remove();
+            }, 10000);
+        }
+
+        // Crea un nuevo corazón cada 500ms
+        setInterval(createHeart, 500);
+
+    </script>
+</body>
+</html>
